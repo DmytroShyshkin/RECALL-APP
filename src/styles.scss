@@ -1,1 +1,175 @@
-/* You can add global styles to this file, and also import other style files */
+@use './fonts.scss' as *;
+
+:root {
+  /* backgrounds */
+  --color-bg:          #111210;
+  --color-surface:     #1C1D1A;
+  --color-surface-hi:  #2C2D28;  /* светлее, для hover-поверхностей */
+
+  /* borders */
+  --color-border:      #2C2D28;
+  --color-border-hi:   #3C3D38;  /* ярче, для активных/focused границ */
+
+  /* accent — amber
+     dim  → тёмный фон под акцентный элемент (фон тега, чипа)
+     base → основной акцент (кнопки, прогресс-бар)
+     hi   → светлее, для hover и активных состояний          */
+  --color-accent-dim:  #412402;
+  --color-accent:      #BA7517;
+  --color-accent-hi:   #EF9F27;
+
+  /* text
+     muted → второстепенное: подписи, плейсхолдеры, счётчики
+     base  → основной текст
+     hi    → важный текст: заголовки карточек, слова           */
+  --color-text-muted:  #9A9890;
+  --color-text:        #FAC775;
+  --color-text-hi:     #FAEEDA;
+
+  --color-error:       #E53E3E;
+}
+
+* {
+  font-family: "Ubuntu", sans-serif;
+  color: var(--color-text);
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  background-color: var(--color-bg);
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: transparent;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.90;
+  }
+}
+
+.btn:active { transform: scale(0.97); }
+
+  /* variants */
+.btn-primary   { 
+    background: var(--color-accent);
+    color: var(--color-text-hi);
+    width: 160px;
+  }
+.btn-primary:hover { background: var(--color-accent-hi); }
+
+.btn-primary:disabled {
+  background: var(--color-accent-dim);
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary { 
+    background: var(--color-surface-hi);
+    color: var(--color-text);
+    border: 0.5px solid var(--color-border-hi);
+    padding: 0.5rem 1.25rem;
+    width: 120px;
+  }
+.btn-secondary:hover { background: var(--color-border-hi); }
+
+.btn-ghost     { 
+    background: transparent;
+    color: var(--color-text);
+    border: 0.5px solid var(--color-accent);
+  }
+.btn-ghost:hover   { background: var(--color-accent-dim); }
+
+.btn-danger    { 
+    background: transparent;
+    color: #E24B4A;
+    border: 0.5px solid #A32D2D;
+  }
+.btn-danger:hover  { background: #501313; }
+  /* ~variants */
+
+  /* sizes */
+.btn-sm { padding: 6px 14px;  font-size: 12px; }
+.btn-lg { padding: 13px 28px; font-size: 16px; }
+  /* ~sizes */
+
+/* ~Buttons */
+
+.error {
+  color: var(--color-error);
+  background-color: var(--color-surface);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  margin-top: 0.25rem;
+  padding-left: 0.25rem;
+  border-left: 2px solid var(--color-error);
+}
+
+.success {
+  color: green;
+  background-color: var(--color-surface);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  margin-top: 0.25rem;
+  padding-left: 0.25rem;
+  border-left: 2px solid green;
+}
+
+input {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border: 0.1em solid var(--color-border);
+  border-radius: 0.5em;
+  gap: 1em;
+  width: 90%;
+  padding: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+// Loading Overlay
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

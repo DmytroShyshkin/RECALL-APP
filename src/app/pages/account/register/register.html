@@ -1,0 +1,27 @@
+<main class="container">
+    <h1>REGISTER</h1>
+    <section>
+        <form [formGroup]="authForm" (submit)="onSubmit()" class="auth-form">
+            <input formControlName="username" type="text" placeholder="Username">
+            @if(submitted && authForm.get('username')?.invalid) {
+                <div class="error">Username is required.</div>
+            }
+            <input formControlName="email" type="email" placeholder="Email">
+            @if(submitted && authForm.get('email')?.invalid) {
+                <div class="error">Please enter a valid email address.</div>
+            }
+            <input formControlName="password" type="password" placeholder="Password">
+            @if(submitted) {
+                @if(authForm.get('password')?.hasError('required')) {
+                    <div class="error">Password is required.</div>
+                } @else if (authForm.get('password')?.hasError('minlength')) {
+                    <div class="error">Password must be at least 8 characters long.</div>
+                }
+            }
+            @if(errorMessage) {
+                <p class="error">{{ errorMessage }}</p>
+            }
+            <button class="btn btn-primary" [disabled]="!authForm.valid" type="submit">Register</button>
+        </form>
+    </section>
+</main>

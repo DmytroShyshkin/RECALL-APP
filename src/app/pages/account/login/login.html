@@ -1,0 +1,24 @@
+<main class="container">
+    <h1>LOGIN</h1>
+    <section>
+        <form [formGroup]="authForm" (submit)="onSubmit()" class="auth-form">
+            <input formControlName="email" type="email" placeholder="Email">
+            @if(submitted && authForm.get('email')?.invalid) {
+                <div class="error">Please enter a valid email address.</div>
+            }
+            <input formControlName="password" type="password" placeholder="Password">
+            @if(submitted) {
+                @if(authForm.get('password')?.hasError('required')) {
+                    <div class="error">Password is required.</div>
+                }
+            }
+            @if (authForm.get('password')?.hasError('minlength')) {
+                <p class="error">Password must be at least 8 characters long.</p>
+            }
+            @if(submitted && errorMessage) {
+                <p class="error">{{ errorMessage }}</p>
+            }
+            <button class="btn btn-primary" [disabled]="!authForm.valid" type="submit">Login</button>
+        </form>
+    </section>
+</main>

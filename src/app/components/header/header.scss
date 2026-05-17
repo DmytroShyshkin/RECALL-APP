@@ -1,0 +1,44 @@
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 64px;
+  background: transparent;
+}
+
+.header-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.site-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.05em;
+  user-select: none;
+  cursor: pointer;
+}
+
+.dropdown{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: absolute;
+  top: 80%;
+  right: 47%;
+  
+  border: 0.1em solid var(--color-border);
+  background-color: var(--color-surface);
+  border-radius: 0.5em;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 160px;
+
+  padding: 0.5em 1em;
+  z-index: 1000;
+}
+

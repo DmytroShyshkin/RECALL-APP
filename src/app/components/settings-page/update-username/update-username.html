@@ -1,0 +1,17 @@
+<main>
+    <form (submit)="onSubmit()" [formGroup]="usernameForm">
+        <div class="field-row">
+            <label for="newUsername">New Username</label>
+            <input id="newUsername" type="text" placeholder="Enter your new username" formControlName="newUsername">
+        </div>
+        <div class="form-actions">
+            @if (errorMessage) {
+                <p class="error">{{ errorMessage }}</p>
+            }
+            @if (succesMessage) {
+                <p class="success">{{ succesMessage }}</p>
+            }
+            <button class="btn btn-primary" type="submit">UPDATE USERNAME</button>
+        </div>
+    </form>
+</main>

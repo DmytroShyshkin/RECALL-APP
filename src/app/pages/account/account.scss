@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  
+  margin-left: 35%;
+  margin-right: 35%;
+  margin-top: 5%;
+  padding: 2.5em;
+
+  border: 0.1em solid var(--color-border);
+  background-color: var(--color-surface);
+  border-radius: 0.5em;
+}
+
+form, section {
+  background-color: var(--color-surface);
+}
+
+form .btn {
+  margin-left: 10%;
+}
+
+h1{
+  user-select: none;
+  background-color: var(--color-surface);
+}
+
+/* form fields */
+.field {
+  display:        flex;
+  flex-direction: column;
+  gap:            5px;
+}
+
+.field label {
+  font-size:   12px;
+  font-weight: 500;
+  color:       var(--color-text-muted);
+}
+
+.field input {
+  background:    var(--color-surface);
+  border:        0.5px solid var(--color-border);
+  border-radius: 8px;
+  padding:       10px 14px;
+  color:         var(--color-text-hi);
+  font-size:     14px;
+  outline:       none;
+  transition:    border-color 0.15s;
+}
+
+.field input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.field input:focus {
+  border-color: var(--color-accent);
+  box-shadow:   0 0 0 3px var(--color-accent-dim);
+}
+
+/* невалидное поле (ng-invalid.ng-touched) */
+.field input.ng-invalid.ng-touched {
+  border-color: var(--color-error);
+}
+
+.field-error {
+  font-size: 11px;
+  color:     var(--color-error);
+}

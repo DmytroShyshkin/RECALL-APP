@@ -1,0 +1,41 @@
+<div class="words-section">
+  <div class="words-controls">
+    <input 
+      type="text" 
+      placeholder="Search words..." 
+      [(ngModel)]="searchQuery"
+      class="search-input">
+    
+    <select [(ngModel)]="selectedLanguage" class="language-filter">
+      <option value="">All languages</option>
+      @for (lang of availableLanguages; track lang) {
+        <option [value]="lang">{{ lang }}</option>
+      }
+    </select>
+  </div>
+
+@if (pageResponse) {
+    <div class="words-grid">
+    @for (word of filteredWords; track word.id) {
+        <div class="word-card">
+            <p class="word-original">{{ word.originalWord }}</p>
+            <span class="word-language">{{ word.sourceLanguage }}</span>
+            @if (word.translations?.length) {
+                <div class="word-translations">
+                @for (t of word.translations; track t.id) {
+                    <p class="translation">{{ t.translatedWord }} <span class="lang">{{ t.targetLanguage }}</span></p>
+                }
+                </div>
+    }
+            <button class="btn">Edit</button>
+            <button class="btn btn-danger">Delete</button>
+        </div>
+    
+} @empty {
+    <p class="no-words">No words found.</p>
+}
+    </div>
+} @else {
+    <p>Loading...</p>
+}
+</div>

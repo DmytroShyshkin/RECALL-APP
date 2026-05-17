@@ -1,0 +1,17 @@
+<main>
+    <form (submit)="onSubmit()" [formGroup]="emailForm">
+            <div class="field-row">
+            <label for="newEmail">New Email</label>
+            <input id="newEmail" type="email" placeholder="Enter your new email" formControlName="newEmail">
+        </div>
+        <div class="form-actions">
+            @if (errorMessage) {
+                <p class="error">{{ errorMessage }}</p>
+            }
+            @if (succesMessage) {
+                <p class="success">{{ succesMessage }}</p>
+            }
+            <button class="btn btn-primary" type="submit">UPDATE EMAIL</button>
+        </div>
+    </form>
+</main>
