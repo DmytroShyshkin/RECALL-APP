@@ -43,6 +43,6 @@ selectTranslation(translation: TranslationDTO) {
       description: this.editForm.value.description
     };
 
-    this.wordsService.updateTranslation(updated); // твой API-метод
+    this.wordsService.updateTranslation(this.selectedWord.id, this.selectedTranslation.id, updated);
   }
 }
