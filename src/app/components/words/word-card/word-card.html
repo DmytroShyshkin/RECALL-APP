@@ -1,72 +1,125 @@
-<div class="words-section">
-  <div class="words-controls">
-    <input type="text" placeholder="Search words..." [(ngModel)]="searchQuery" class="search-input">
-    <select [(ngModel)]="selectedLanguage" class="language-filter">
-      <option value="">All languages</option>
-      @for (lang of availableLanguages; track lang) {
+<main>
+  <div class="words-section">
+    <div class="words-controls">
+      <input type="text" placeholder="Search words..." [(ngModel)]="searchQuery" class="search-input">
+      <select [(ngModel)]="selectedLanguage" class="language-filter">
+        <option value="">All languages</option>
+        @for (lang of availableLanguages; track lang) {
         <option [value]="lang">{{ lang }}</option>
-      }
-    </select>
+        }
+      </select>
+    </div>
+    <button class="btn btn-primary btn-sm" (click)="openAddWord()">+ Add Word</button>
   </div>
 
   @if (pageResponse) {
-    <div class="words-grid">
-      @for (word of filteredWords; track word.id) {
-        <div class="word-card">
-          <p class="word-original">{{ word.originalWord }}</p>
-          <span class="word-language">{{ word.sourceLanguage }}</span>
-          @if (word.translations?.length) {
-            <div class="word-translations">
-              @for (t of word.translations; track t.id) {
-                <p class="translation">{{ t.translatedWord }} <span class="lang">{{ t.targetLanguage }}</span></p>
-              }
-            </div>
-          }
-          <div class="word-actions">
-            <button class="btn btn-secondary btn-sm" (click)="openEdit(word)">Edit</button>
-            <button class="btn btn-danger btn-sm" (click)="deleteWord(word.id)">Delete</button>
-          </div>
-        </div>
-      } @empty {
-        <p class="no-words">No words found.</p>
-      }
-    </div>
-  } @else {
-    <p>Loading...</p>
-  }
-</div>
-
-@if (isModalOpen && selectedWord) {
-  <div class="modal-overlay" (click)="closeEdit()">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <h2>Edit Word</h2>
-      <form [formGroup]="editForm">
-  <div class="modal-field">
-    <label>Word</label>
-    <input type="text" formControlName="originalWord">
-  </div>
-  <div class="modal-field">
-    <label>Language</label>
-    <input type="text" formControlName="sourceLanguage">
-  </div>
-
-  <hr class="divider">
-  <p class="modal-section-title">Translations</p>
-
-  <div formArrayName="translations">
-    @for (t of translationsArray.controls; track $index) {
-      <div [formGroupName]="$index" class="translation-group">
-        <input type="text" formControlName="targetLanguage" placeholder="Language (e.g. en)">
-        <input type="text" formControlName="translatedWord" placeholder="Translation">
-        <input type="text" formControlName="description" placeholder="Description (optional)">
+  <div class="words-grid">
+    @for (word of filteredWords; track word.id) {
+    <div class="word-card">
+      <div class="word-header">
+        <p class="word-original">{{ word.originalWord }}</p>
+        <span class="word-language" [style.color]="getLanguageColor(word.sourceLanguage)"
+          [style.background]="getLanguageBg(word.sourceLanguage)"
+          [style.border-color]="getLanguageColor(word.sourceLanguage)">
+          {{ word.sourceLanguage }}
+        </span>
       </div>
+      @if (word.translations?.length) {
+      <div class="word-translations">
+        @for (t of word.translations; track t.id) {
+        <p class="translation" [style.border-color]="getLanguageColor(t.targetLanguage)"
+          [style.color]="getLanguageColor(t.targetLanguage)">
+          {{ t.translatedWord }}
+        </p>
+        }
+      </div>
+      }
+      <div class="word-actions">
+        <button class="btn btn-secondary btn-sm" (click)="openEdit(word)">Edit</button>
+        <button class="btn btn-danger btn-sm" (click)="deleteWord(word.id)">Delete</button>
+      </div>
+    </div>
+    } @empty {
+    <p class="no-words">No words found.</p>
     }
   </div>
-</form>
-      <div class="modal-actions">
-        <button class="btn btn-primary" (click)="onSave()">Save</button>
-        <button class="btn btn-secondary" (click)="closeEdit()">Cancel</button>
+  } @else {
+  <p>Loading...</p>
+  }
+</main>
+
+@if (isModalOpen && selectedWord) {
+<div class="modal-overlay" (click)="closeEdit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h2>Edit Word</h2>
+    <form [formGroup]="editForm">
+      <div class="modal-field">
+        <label>Word</label>
+        <input type="text" formControlName="originalWord">
       </div>
+      <div class="modal-field">
+        <label>Language</label>
+        <input type="text" formControlName="sourceLanguage">
+      </div>
+
+      <hr class="divider">
+      <p class="modal-section-title">Translations</p>
+
+      <div formArrayName="translations">
+        @for (t of translationsArray.controls; track $index) {
+        <div [formGroupName]="$index" class="translation-group">
+          <input type="text" formControlName="targetLanguage" style="display:none">
+          <input type="text" formControlName="translatedWord" placeholder="Translation">
+          <textarea formControlName="description" placeholder="Description (optional)"
+            class="description-field"></textarea>
+          <button class="btn btn-danger btn-sm" type="button" (click)="removeTranslation($index)">Remove</button>
+        </div>
+        }
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" (click)="addTranslation()">+ Add Translation</button>
+    </form>
+    <div class="modal-actions">
+      <button class="btn btn-primary" (click)="onSave()">Save</button>
+      <button class="btn btn-secondary" (click)="closeEdit()">Cancel</button>
     </div>
   </div>
+</div>
+}
+
+@if (isAddModalOpen) {
+<div class="modal-overlay" (click)="closeAddWord()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h2>Add Word</h2>
+    <form [formGroup]="addWordForm">
+      <div class="modal-field">
+        <label>Word</label>
+        <input type="text" formControlName="originalWord">
+      </div>
+      <div class="modal-field">
+        <label>Language</label>
+        <input type="text" formControlName="sourceLanguage" placeholder="e.g. en">
+      </div>
+
+      <hr class="divider">
+      <p class="modal-section-title">Translations</p>
+
+      <div formArrayName="translations">
+        @for (t of addTranslationsArray.controls; track $index) {
+        <div [formGroupName]="$index" class="translation-group">
+          <input type="text" formControlName="targetLanguage" style="display:none">
+          <input type="text" formControlName="translatedWord" placeholder="Translation">
+          <textarea formControlName="description" placeholder="Description (optional)"
+            class="description-field"></textarea>
+          <button class="btn btn-danger btn-sm" type="button" (click)="removeNewTranslation($index)">Remove</button>
+        </div>
+        }
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" (click)="addNewTranslation()">+ Add Translation</button>
+    </form>
+    <div class="modal-actions">
+      <button class="btn btn-primary" (click)="onAddWord()">Add</button>
+      <button class="btn btn-secondary" (click)="closeAddWord()">Cancel</button>
+    </div>
+  </div>
+</div>
 }

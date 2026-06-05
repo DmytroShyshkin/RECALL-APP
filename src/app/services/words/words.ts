@@ -21,6 +21,10 @@ export class Words {
     return this.http.get<PageResponse<WordsDTO>>(`${this.apiUrl}/words/user`, { params });
   }
 
+  createWord(data: { sourceLanguage: string; originalWord: string; translations?: TranslationDTO[] | null }) {
+    return this.http.post(`${this.apiUrl}/words`, data);
+  }
+
   updateWord(wordId: string, data: { originalWord: string; sourceLanguage: string }) {
     return this.http.put(`${this.apiUrl}/words/update-word/${wordId}`, data);
   }
@@ -33,6 +37,10 @@ export class Words {
     return this.http.delete(`${this.apiUrl}/words/delete-word/${wordId}`);
   }
 
+  addTranslation(wordId: string, data: TranslationDTO) {
+    return this.http.post(`${this.apiUrl}/words/${wordId}/translations`, data);
+  }
+  
   deleteTranslation(wordId: string, translationId: string) {
     return this.http.delete(`${this.apiUrl}/words/${wordId}/translations/${translationId}`);
   }
