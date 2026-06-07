@@ -23,6 +23,11 @@
   cursor: pointer;
 }
 
+.site-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
 .dropdown{
   display: flex;
   flex-direction: column;
