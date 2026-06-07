@@ -1,39 +1,47 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Words } from '../../../services/words/words';
 import { PageResponse, WordsDTO } from '../../../models/words/words.model';
-import { AuthService } from '../../../services/auth';
+import { TranslationDTO } from '../../../models/translations/translations.model';
 
 @Component({
   selector: 'app-word-card',
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './word-card.html',
   styleUrl: './word-card.scss',
 })
 export class WordCard implements OnInit {
   pageResponse: PageResponse<WordsDTO> | null = null;
-  pageNo: number = 0;
-  pageSize: number = 10;
-  ownerEmail: string = '';
-
+  pageNo = 0;
+  pageSize = 50;
   searchQuery = '';
   selectedLanguage = '';
 
-  constructor(private wordsService: Words, private authService: AuthService) {}
+  isModalOpen = false;
+  isAddModalOpen = false;
+  selectedWord: WordsDTO | null = null;
+  editForm: FormGroup;
+  addWordForm: FormGroup;
+
+  constructor(private wordsService: Words, private fb: FormBuilder) {
+    this.editForm = this.fb.group({
+      originalWord: [''],
+      sourceLanguage: ['']
+    });
+    this.addWordForm = this.fb.group({
+      originalWord: ['', Validators.required],
+      sourceLanguage: ['', Validators.required],
+      translations: this.fb.array([])
+    });
+  }
 
   ngOnInit(): void {
-    const email = this.authService.getEmailFromToken();
-    if (email) {
-      this.ownerEmail = email;
-      this.loadWords();
-    }
+    this.loadWords();
   }
 
   loadWords(): void {
     this.wordsService.getWordsByOwner(this.pageNo, this.pageSize).subscribe({
-      next: (response) => {
-        this.pageResponse = response;
-      },
+      next: (response) => this.pageResponse = response,
       error: (err) => console.error('Error:', err),
     });
   }
@@ -45,17 +53,186 @@ export class WordCard implements OnInit {
 
   get filteredWords(): WordsDTO[] {
     if (!this.pageResponse) return [];
-    
-    return this.pageResponse.content.filter(word => {      
-      const matchesSearch = word.originalWord
-        .toLowerCase()
-        .includes(this.searchQuery.toLowerCase());
-
-      const matchesLanguage = this.selectedLanguage
-        ? word.sourceLanguage === this.selectedLanguage
-        : true;
-
+    return this.pageResponse.content.filter(word => {
+      const matchesSearch = word.originalWord.toLowerCase().includes(this.searchQuery.toLowerCase());
+      const matchesLanguage = this.selectedLanguage ? word.sourceLanguage === this.selectedLanguage : true;
       return matchesSearch && matchesLanguage;
     });
+  }
+
+  get translationsArray(): FormArray {
+    return this.editForm.get('translations') as FormArray;
+  }
+
+  openEdit(word: WordsDTO) {
+    this.selectedWord = word;
+
+    const translationGroups = (word.translations || []).map(t =>
+      this.fb.group({
+        id: [t.id],
+        targetLanguage: [t.targetLanguage],
+        translatedWord: [t.translatedWord],
+        description: [t.description]
+      })
+    );
+
+    this.editForm = this.fb.group({
+      originalWord: [word.originalWord],
+      sourceLanguage: [word.sourceLanguage],
+      translations: this.fb.array(translationGroups)
+    });
+
+    this.isModalOpen = true;
+  }
+
+  closeEdit() {
+    this.isModalOpen = false;
+    this.selectedWord = null;
+  }
+
+  onSave() {
+    if (!this.selectedWord) return;
+
+    const { originalWord, sourceLanguage, translations } = this.editForm.value;
+
+    const wordChanged = originalWord !== this.selectedWord.originalWord
+      || sourceLanguage !== this.selectedWord.sourceLanguage;
+
+    if (wordChanged) {
+      this.wordsService.updateWord(this.selectedWord.id, { originalWord, sourceLanguage })
+        .subscribe({ error: (err) => console.error(err) });
+    }
+
+    const originalTranslations = this.selectedWord.translations || [];
+
+    translations.forEach((t: TranslationDTO) => {
+      if (!t.id) {
+        this.wordsService.addTranslation(this.selectedWord!.id, t)
+          .subscribe({ error: (err) => console.error(err) });
+      } else {
+        const original = originalTranslations.find(ot => ot.id === t.id);
+        if (!original) return;
+
+        const changed = t.translatedWord !== original.translatedWord
+          || t.targetLanguage !== original.targetLanguage
+          || t.description !== original.description;
+
+        if (changed) {
+          this.wordsService.updateTranslation(this.selectedWord!.id, t.id, t)
+            .subscribe({ error: (err) => console.error(err) });
+        }
+      }
+    });
+
+    setTimeout(() => {
+      this.loadWords();
+      this.closeEdit();
+    }, 300);
+  }
+
+  deleteWord(wordId: string) {
+    this.wordsService.deleteWord(wordId).subscribe({
+      next: () => this.loadWords(),
+      error: (err) => console.error('Error deleting word:', err)
+    });
+  }
+
+  addTranslation() {
+    this.translationsArray.push(this.fb.group({
+      id: [null],
+      targetLanguage: [this.selectedWord?.sourceLanguage || ''],
+      translatedWord: [''],
+      description: [null]
+    }));
+  }
+
+  removeTranslation(index: number) {
+    const translation = this.translationsArray.at(index).value;
+
+    if (translation.id) {
+      this.wordsService.deleteTranslation(this.selectedWord!.id, translation.id)
+        .subscribe({ error: (err) => console.error(err) });
+    }
+
+    this.translationsArray.removeAt(index);
+  }
+  openAddWord() {
+    this.addWordForm = this.fb.group({
+      originalWord: ['', Validators.required],
+      sourceLanguage: ['', Validators.required],
+      translations: this.fb.array([])
+    });
+    this.isAddModalOpen = true;
+  }
+
+  closeAddWord() {
+    this.isAddModalOpen = false;
+  }
+
+  onAddWord() {
+    if (this.addWordForm.invalid) return;
+    const { originalWord, sourceLanguage, translations } = this.addWordForm.value;
+
+    this.wordsService.createWord({ originalWord, sourceLanguage }).subscribe({
+      next: (word: any) => {
+        const pending = (translations || []).filter((t: any) => t.translatedWord);
+        if (pending.length === 0) {
+          this.loadWords();
+          this.closeAddWord();
+          return;
+        }
+
+        let completed = 0;
+        pending.forEach((t: any) => {
+          this.wordsService.addTranslation(word.id, t).subscribe({
+            next: () => {
+              completed++;
+              if (completed === pending.length) {
+                this.loadWords();
+                this.closeAddWord();
+              }
+            },
+            error: (err) => console.error(err)
+          });
+        });
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  addNewTranslation() {
+    const sourceLanguage = this.addWordForm.get('sourceLanguage')?.value || '';
+    this.addTranslationsArray.push(this.fb.group({
+      targetLanguage: [sourceLanguage],
+      translatedWord: [''],
+      description: [null]
+    }));
+  }
+
+  removeNewTranslation(index: number) {
+    this.addTranslationsArray.removeAt(index);
+  }
+
+  get addTranslationsArray(): FormArray {
+    return this.addWordForm.get('translations') as FormArray;
+  }
+
+  // Utility functions to generate consistent colors based on language
+  getLanguageColor(lang: string): string {
+    let hash = 0;
+    for (let i = 0; i < lang.length; i++) {
+      hash = lang.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    return `hsl(${h}, 60%, 70%)`;
+  }
+
+  getLanguageBg(lang: string): string {
+    let hash = 0;
+    for (let i = 0; i < lang.length; i++) {
+      hash = lang.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    return `hsla(${h}, 60%, 40%, 0.15)`;
   }
 }
