@@ -140,7 +140,7 @@ export class WordCard implements OnInit {
   addTranslation() {
     this.translationsArray.push(this.fb.group({
       id: [null],
-      targetLanguage: [this.selectedWord?.sourceLanguage || ''],
+      targetLanguage: [''],
       translatedWord: [''],
       description: [null]
     }));
@@ -201,12 +201,11 @@ export class WordCard implements OnInit {
   }
 
   addNewTranslation() {
-    const sourceLanguage = this.addWordForm.get('sourceLanguage')?.value || '';
     this.addTranslationsArray.push(this.fb.group({
-      targetLanguage: [sourceLanguage],
-      translatedWord: [''],
-      description: [null]
-    }));
+    targetLanguage: [''],
+    translatedWord: [''],
+    description: [null]
+  }));
   }
 
   removeNewTranslation(index: number) {

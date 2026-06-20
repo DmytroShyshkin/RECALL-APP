@@ -65,11 +65,12 @@
       <hr class="divider">
       <p class="modal-section-title">Translations</p>
 
+      
       <div formArrayName="translations">
         @for (t of translationsArray.controls; track $index) {
         <div [formGroupName]="$index" class="translation-group">
-          <input type="text" formControlName="targetLanguage" style="display:none">
           <input type="text" formControlName="translatedWord" placeholder="Translation">
+          <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
           <textarea formControlName="description" placeholder="Description (optional)"
             class="description-field"></textarea>
           <button class="btn btn-danger btn-sm" type="button" (click)="removeTranslation($index)">Remove</button>
@@ -106,8 +107,8 @@
       <div formArrayName="translations">
         @for (t of addTranslationsArray.controls; track $index) {
         <div [formGroupName]="$index" class="translation-group">
-          <input type="text" formControlName="targetLanguage" style="display:none">
           <input type="text" formControlName="translatedWord" placeholder="Translation">
+          <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
           <textarea formControlName="description" placeholder="Description (optional)"
             class="description-field"></textarea>
           <button class="btn btn-danger btn-sm" type="button" (click)="removeNewTranslation($index)">Remove</button>
