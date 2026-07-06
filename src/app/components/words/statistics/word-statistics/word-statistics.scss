@@ -1,0 +1,23 @@
+div {
+    .statGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        justify-content: center;
+        max-width: 1200px;
+    }
+
+
+    .statInfo {
+        border: 1px solid var(--color-border);
+        padding-left: 10px;
+        padding-right: 10px;
+
+        background-color: var(--color-surface);
+        height: 100%;
+    }
+}
+
+p {
+    font-size: 0.9rem;
+}

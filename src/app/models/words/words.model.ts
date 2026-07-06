@@ -17,3 +17,18 @@ export interface PageResponse<T> {
   totalElements: number;
   last: boolean;
 }
+
+// Word statistics
+export interface WordStatisticsDTO {
+  wordId: string;
+  totalReviews: number;
+  correctReviews: number;
+  lapses: number;
+  lastReviewedAt: string | null;
+}
+
+export interface UserStatsSummaryDTO {
+  currentStreak: number;
+  totalWordsLearned: number;
+  totalReviews: number;
+}

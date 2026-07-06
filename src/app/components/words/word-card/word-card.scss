@@ -1,6 +1,6 @@
-main {
-  display: flex;
-  flex-direction: column;
+.main {
+  display: block;
+  padding: 1.5rem;
 }
 
 input {
@@ -142,7 +142,14 @@ input {
 }
 
 .words-section {
-  padding: 1.5rem;
+  display: flex;
+  padding: 0.5rem;
+  
+  flex-direction: column;
+  margin-left: 10rem;
+  margin-right: 10rem;
+  
+  justify-content: center;
 }
 
 .words-controls {
@@ -153,11 +160,8 @@ input {
 
 .words-grid {
   display: grid;
-  grid-auto-flow: column;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1rem;
-  justify-content: center;
-  justify-items: center;
 }
 
 .word-header {

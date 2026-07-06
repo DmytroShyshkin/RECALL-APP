@@ -1,4 +1,5 @@
-<main>
+<!-- Switch statement for different word card views -->
+<div class="main">
   <div class="words-section">
     <div class="words-controls">
       <input type="text" placeholder="Search words..." [(ngModel)]="searchQuery" class="search-input">
@@ -12,6 +13,7 @@
     <button class="btn btn-primary btn-sm" (click)="openAddWord()">+ Add Word</button>
   </div>
 
+  <!-- Word Grid -->
   @if (pageResponse) {
   <div class="words-grid">
     @for (word of filteredWords; track word.id) {
@@ -46,7 +48,7 @@
   } @else {
   <p>Loading...</p>
   }
-</main>
+</div>
 
 @if (isModalOpen && selectedWord) {
 <div class="modal-overlay" (click)="closeEdit()">
@@ -65,7 +67,7 @@
       <hr class="divider">
       <p class="modal-section-title">Translations</p>
 
-      
+
       <div formArrayName="translations">
         @for (t of translationsArray.controls; track $index) {
         <div [formGroupName]="$index" class="translation-group">
