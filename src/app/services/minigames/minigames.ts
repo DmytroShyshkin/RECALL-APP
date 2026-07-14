@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Minigames {
-  private apiMiniGamesUrl = 'https://recall-quiz-microservice.onrender.com/';
+  //private apiMiniGamesUrl = 'https://recall-quiz-microservice.onrender.com/';
+  private apiMiniGamesUrl = environment.apiMiniGamesUrl;
+
 
   constructor(private http: HttpClient) {}
 
   // AnkiController
   initializeAnkiGame(data: {sourceLanguage: string, targetLanguage: string}) {
-    return this.http.post(`${this.apiMiniGamesUrl}anki/initialize`, data);
+    return this.http.post(`${this.apiMiniGamesUrl}anki/initiate`, data);
   }
 
   nextAnkiCard(){
