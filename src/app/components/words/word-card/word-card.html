@@ -68,14 +68,20 @@
       <p class="modal-section-title">Translations</p>
 
 
-      <div formArrayName="translations">
+      <div formArrayName="translations" class="translations-scroll">
         @for (t of translationsArray.controls; track $index) {
-        <div [formGroupName]="$index" class="translation-group">
-          <input type="text" formControlName="translatedWord" placeholder="Translation">
-          <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
-          <textarea formControlName="description" placeholder="Description (optional)"
-            class="description-field"></textarea>
-          <button class="btn btn-danger btn-sm" type="button" (click)="removeTranslation($index)">Remove</button>
+        <div class="translation-group-container">
+          <div [formGroupName]="$index" class="translation-group">
+            <input type="text" formControlName="translatedWord" placeholder="Translation">
+            <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
+          </div>
+          <div [formGroupName]="$index" class="translation-group">
+            <textarea formControlName="description" placeholder="Description (optional)"
+              class="description-field"></textarea>
+          </div>
+          <div [formGroupName]="$index" class="translation-group">
+            <button class="btn btn-danger btn-sm" type="button" (click)="removeTranslation($index)">Remove</button>
+          </div>
         </div>
         }
       </div>

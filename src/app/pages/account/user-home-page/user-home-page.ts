@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Users } from '../../../services/users/users';
 import { WordCard } from '../../../components/words/word-card/word-card';
-import { WordStatistics } from '../../../components/words/statistics/word-statistics/word-statistics'
-import { WordSummary } from '../../../components/words/statistics/word-summary/word-summary'
 
 type UserData = {
   username: string;
@@ -12,7 +10,7 @@ type UserData = {
 
 @Component({
   selector: 'app-user-home-page',
-  imports: [WordCard, WordStatistics, WordSummary],
+  imports: [WordCard],
   templateUrl: './user-home-page.html',
   styleUrl: './user-home-page.scss',
 })

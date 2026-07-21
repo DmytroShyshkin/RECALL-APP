@@ -6,6 +6,10 @@
     margin-top: 2rem;
 }
 
+h1 {
+    text-align: center;
+}
+
 .buttonContainer {
     display: flex;
     justify-content: center;
@@ -19,6 +23,7 @@ form {
 
 section {
     border: 2px solid var(--color-border-hi);
+    background: var(--color-surface);
     padding: 2rem;
     border-radius: 8px;
     width: 400px;

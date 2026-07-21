@@ -1,1 +1,39 @@
-<p>quiz-game works!</p>
+<h1>Quiz Game</h1>
+@if(!isGameInitialized){
+<div class="quiz-form-container">
+    <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+        <div class="labelContainer">
+            <div>
+                <label for="languages">Languages:</label>
+                <input id="languages" name="languages" formControlName="languages" placeholder="Example: en, es">
+            </div>
+            <div [hidden]="true">
+                <label for="wordCount">Word Count:</label>
+                <input id="wordCount" name="wordCount" formControlName="wordCount" placeholder="Example: 4">
+            </div>
+        </div>
+
+        <div class="buttonContainer">
+            <button type="submit" class="btn btn-primary" [disabled]="!quizForm.valid">Initialize Game</button>
+        </div>
+    </form>
+</div>
+}@else {
+<div class="quiz-game-container">
+    @if(!quizSession?.completed) {
+    <div class="quizQuestion">
+        <p>{{ quizSession?.currentQuestion?.question }}</p>
+    </div>
+    <div class="quizOptions">
+        @for(option of quizSession?.currentQuestion?.options; track $index) {
+        <button class="btn btn-secondary" (click)="answerQuizQuestionGame(option)">{{ option }}</button>
+        }
+    </div>
+    }@else{
+    <div class="quizCompleted">
+        <p>Congratulations! You've completed the quiz game.</p>
+        <p>Your score: {{ quizSession?.score }} / {{ quizSession?.totalQuestions }}</p>
+    </div>
+    }
+</div>
+}

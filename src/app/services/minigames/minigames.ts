@@ -6,6 +6,7 @@ import { environment } from '../../environment';
   providedIn: 'root',
 })
 export class Minigames {
+  private _exitCallback: (() => void) | null = null; // Callback function to be called when exiting the minigame
   //private apiMiniGamesUrl = 'https://recall-quiz-microservice.onrender.com/';
   private apiMiniGamesUrl = environment.apiMiniGamesUrl;
 
@@ -14,29 +15,45 @@ export class Minigames {
 
   // AnkiController
   initializeAnkiGame(data: {sourceLanguage: string, targetLanguage: string}) {
-    return this.http.post(`${this.apiMiniGamesUrl}anki/initiate`, data);
+    return this.http.post(`${this.apiMiniGamesUrl}/anki/initiate`, data);
   }
 
   nextAnkiCard(){
-    return this.http.get(`${this.apiMiniGamesUrl}anki/next`);
+    return this.http.get(`${this.apiMiniGamesUrl}/anki/next`);
   }
 
   reviewAnkiCard(id: string, rating: number){
-    return this.http.post(`${this.apiMiniGamesUrl}anki/${id}/review`, { rating });
+    return this.http.post(`${this.apiMiniGamesUrl}/anki/${id}/review`, { rating });
   }
   // ~AnkiController
 
   // QuizController
-  startQuiz(data: {language: string[], wordCount: number}) {
+  startQuiz(data: {languages: string[], wordCount: number}) {
     return this.http.post(`${this.apiMiniGamesUrl}/quiz/start`, data);
   }
 
   answerQuizQuestion(sessionId: string, answer: string) {
-    return this.http.post(`${this.apiMiniGamesUrl}/quiz/${sessionId}/answer`, answer);
-  }
+  return this.http.post(`${this.apiMiniGamesUrl}/quiz/${sessionId}/answer`, { userAnswer: answer });
+}
 
   getQuizResult(sessionId: string) {
     return this.http.get(`${this.apiMiniGamesUrl}/quiz/${sessionId}/result`);
   }
+
+  deleteQuizSession(sessionId: string) {
+    return this.http.delete(`${this.apiMiniGamesUrl}/quiz/${sessionId}/deleteSession`);
+  }
   // ~QuizController
+
+  // Callback registration for exiting the minigame
+  registerExitCallback(cb: () => void) {
+    this._exitCallback = cb;
+  }
+
+  exitToMainPage() {
+    if (this._exitCallback) {
+      this._exitCallback();
+    }
+  }
+  // ~Callback registration for exiting the minigame
 }

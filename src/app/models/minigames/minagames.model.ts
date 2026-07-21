@@ -24,6 +24,8 @@ export interface QuizSessionResponse{
     totalQuestions: number;
     score: number;
     completed: boolean;
+    correctAnswer: QuizQuestionResponse[];
+    wrongAnswer: QuizQuestionResponse[];
     currentQuestion: QuizQuestionResponse;
 }
 
