@@ -1,0 +1,36 @@
+.wordStatisticsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /*
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    */
+    padding: 1rem;
+}
+
+.wordStatistics {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .statGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        max-width: 1200px;
+        width: 100%;
+    }
+
+    .statInfo {
+        border: 1px solid var(--color-border);
+        padding: 10px;
+        background-color: var(--color-surface);
+    }
+}
+
+p {
+    font-size: 0.9rem;
+}

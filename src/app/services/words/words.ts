@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { WordsDTO, PageResponse } from '../../models/words/words.model';
+import { WordsDTO, PageResponse, WordStatisticsDTO, UserStatsSummaryDTO } from '../../models/words/words.model';
 import { Observable } from 'rxjs';
 import { TranslationDTO } from '../../models/translations/translations.model';
 
@@ -13,6 +13,7 @@ export class Words {
 
   constructor(private http: HttpClient) {}
 
+  // WordController
   getWordsByOwner(pageNo: number, pageSize: number): Observable<PageResponse<WordsDTO>> {
     const params = new HttpParams()
       .set('pageNo', pageNo)
@@ -29,12 +30,14 @@ export class Words {
     return this.http.put(`${this.apiUrl}/words/update-word/${wordId}`, data);
   }
 
-  updateTranslation(wordId: string, translationId: string, data: TranslationDTO) {
-    return this.http.put(`${this.apiUrl}/words/${wordId}/translations/${translationId}`, data);
-  }
-
   deleteWord(wordId: string) {
     return this.http.delete(`${this.apiUrl}/words/delete-word/${wordId}`);
+  }
+  // ~WordController
+  // TranslationController
+
+  updateTranslation(wordId: string, translationId: string, data: TranslationDTO) {
+    return this.http.put(`${this.apiUrl}/words/${wordId}/translations/${translationId}`, data);
   }
 
   addTranslation(wordId: string, data: TranslationDTO) {
@@ -44,4 +47,14 @@ export class Words {
   deleteTranslation(wordId: string, translationId: string) {
     return this.http.delete(`${this.apiUrl}/words/${wordId}/translations/${translationId}`);
   }
+  // ~TranslationController
+  // WordStatisticsController
+  getWordStatistics(){
+    return this.http.get<WordStatisticsDTO[]>(`${this.apiUrl}/statistics/words`);
+  }
+
+  getUserStatsSummary(){
+    return this.http.get<UserStatsSummaryDTO>(`${this.apiUrl}/statistics/summary`);
+  }
+  // ~WordStatisticsController
 }

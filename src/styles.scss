@@ -44,6 +44,11 @@ body {
   background-color: var(--color-bg);
 }
 
+hr {
+  border: 0.5px solid var(--color-border);
+  margin: 1rem 0;
+}
+
 /* Buttons */
 .btn {
   display: inline-block;

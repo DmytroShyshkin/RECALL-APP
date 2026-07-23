@@ -1,4 +1,15 @@
-header{
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    
+    padding: 0 2rem;
+    height: 64px;
+    background: transparent;
+
     h1 {
         margin-bottom: 0.25rem;
     }

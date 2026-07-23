@@ -1,7 +1,17 @@
 <header>
-    <h1 class="title">Hello, {{ userData?.username }}!</h1>
-    <p>{{ userData?.email }}</p>
+    <div>
+        <h1 class="title">Hello, {{ userData?.username }}!</h1>
+        <p>{{ userData?.email }}</p>
+    </div>
+
+    <div>
+        <button class="btn btn-secondary" (click)="openMinigames()">Minigames</button>
+        <!-- <app-word-summary></app-word-summary> -->
+    </div>
+
+
 </header>
-<main>
-    <app-word-card></app-word-card>
-</main>
+
+<hr>
+
+<app-word-card></app-word-card>

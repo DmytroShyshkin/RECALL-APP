@@ -54,12 +54,16 @@
 }
 
 /* ---------------- HEADERS ---------------- */
-
 h1 {
     text-align: center;
 }
 
 /* ---------------- FORM STYLES ---------------- */
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+}
 
 form {
     display: flex;

@@ -1,0 +1,22 @@
+@if(activatedGame === null){
+<nav>
+    <button class="btn btn-primary btn-lg" (click)="activateGame('ANKI')">Initialize Anki</button>
+    <button class="btn btn-primary btn-lg" (click)="activateGame('QUIZ')">Initialize Quiz</button>
+</nav>
+
+<hr>
+<app-word-statistics></app-word-statistics>
+<hr>
+<app-word-summary></app-word-summary>
+<hr>
+} @else {
+<button class="btn btn-primary btn-lg" (click)="deactivateGame()">RETURN</button>
+}
+
+<div class="game-container">
+    @if(activatedGame === 'ANKI'){
+        <app-anki-game></app-anki-game>
+    } @else if(activatedGame === 'QUIZ'){
+        <app-quiz-game></app-quiz-game>
+    }
+</div>

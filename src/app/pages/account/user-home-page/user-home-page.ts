@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Users } from '../../../services/users/users';
 import { WordCard } from '../../../components/words/word-card/word-card';
 
@@ -14,7 +15,7 @@ type UserData = {
   styleUrl: './user-home-page.scss',
 })
 export class UserHomePage implements OnInit{
-  constructor(private usersService: Users) {}
+  constructor(private router: Router,private usersService: Users) {}
 
   userData: UserData | null = null;
 
@@ -27,5 +28,9 @@ export class UserHomePage implements OnInit{
       console.error('Could not load user info', err);
     }
     });
+  }
+
+  openMinigames() {
+    this.router.navigate(['/minigames']);
   }
 }

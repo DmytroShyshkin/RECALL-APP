@@ -1,4 +1,5 @@
-<main>
+<!-- Switch statement for different word card views -->
+<div class="main">
   <div class="words-section">
     <div class="words-controls">
       <input type="text" placeholder="Search words..." [(ngModel)]="searchQuery" class="search-input">
@@ -12,6 +13,7 @@
     <button class="btn btn-primary btn-sm" (click)="openAddWord()">+ Add Word</button>
   </div>
 
+  <!-- Word Grid -->
   @if (pageResponse) {
   <div class="words-grid">
     @for (word of filteredWords; track word.id) {
@@ -46,7 +48,7 @@
   } @else {
   <p>Loading...</p>
   }
-</main>
+</div>
 
 @if (isModalOpen && selectedWord) {
 <div class="modal-overlay" (click)="closeEdit()">
@@ -65,14 +67,21 @@
       <hr class="divider">
       <p class="modal-section-title">Translations</p>
 
-      <div formArrayName="translations">
+
+      <div formArrayName="translations" class="translations-scroll">
         @for (t of translationsArray.controls; track $index) {
-        <div [formGroupName]="$index" class="translation-group">
-          <input type="text" formControlName="targetLanguage" style="display:none">
-          <input type="text" formControlName="translatedWord" placeholder="Translation">
-          <textarea formControlName="description" placeholder="Description (optional)"
-            class="description-field"></textarea>
-          <button class="btn btn-danger btn-sm" type="button" (click)="removeTranslation($index)">Remove</button>
+        <div class="translation-group-container">
+          <div [formGroupName]="$index" class="translation-group">
+            <input type="text" formControlName="translatedWord" placeholder="Translation">
+            <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
+          </div>
+          <div [formGroupName]="$index" class="translation-group">
+            <textarea formControlName="description" placeholder="Description (optional)"
+              class="description-field"></textarea>
+          </div>
+          <div [formGroupName]="$index" class="translation-group">
+            <button class="btn btn-danger btn-sm" type="button" (click)="removeTranslation($index)">Remove</button>
+          </div>
         </div>
         }
       </div>
@@ -106,8 +115,8 @@
       <div formArrayName="translations">
         @for (t of addTranslationsArray.controls; track $index) {
         <div [formGroupName]="$index" class="translation-group">
-          <input type="text" formControlName="targetLanguage" style="display:none">
           <input type="text" formControlName="translatedWord" placeholder="Translation">
+          <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
           <textarea formControlName="description" placeholder="Description (optional)"
             class="description-field"></textarea>
           <button class="btn btn-danger btn-sm" type="button" (click)="removeNewTranslation($index)">Remove</button>
