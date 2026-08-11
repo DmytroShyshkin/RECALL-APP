@@ -21,6 +21,7 @@ export interface PageResponse<T> {
 // Word statistics
 export interface WordStatisticsDTO {
   wordId: string;
+  word: string;
   totalReviews: number;
   correctReviews: number;
   lapses: number;

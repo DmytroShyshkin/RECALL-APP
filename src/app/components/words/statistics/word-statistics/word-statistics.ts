@@ -32,12 +32,9 @@ export class WordStatistics implements OnInit {
         console.log('stat wordIds:', response.map(s => s.wordId));
 
         this.wordStatistics = response.map(stat => {
-          const word = words.find(w => w.id === stat.wordId);
-          console.log(`stat ${stat.wordId} -> found:`, !!word, word?.originalWord);
 
           return {
             ...stat,
-            wordId: word?.originalWord ?? stat.wordId,
             lastReviewedAt: stat.lastReviewedAt
               ? new Date(stat.lastReviewedAt).toLocaleString('en-US', {
                 year: 'numeric', month: '2-digit', day: '2-digit',

@@ -10,23 +10,12 @@ import { AnkiCardResponse } from '../../../models/minigames/minagames.model'
   styleUrl: './anki-game.scss',
 })
 export class AnkiGame {
-  isGameInitialized: boolean = false;
+  isGameInitialized = false;
+  isGameFinished = false;
 
-  // Anki Card related properties
-  AnkiDeckCards: AnkiCardResponse[] = [];
   ankiCard: AnkiCardResponse | null = null;
+  lastReviewedCard: AnkiCardResponse | null = null;
 
-  isLastCardSame(): boolean {
-    const lastCard = this.AnkiDeckCards[this.AnkiDeckCards.length - 1];
-
-    if (!lastCard || !this.ankiCard) {
-      return false;
-    }
-
-    return lastCard.id === this.ankiCard.id;
-  }
-
-  // FormGroup to handle the form data
   ankiForm: FormGroup;
 
   constructor(private fb: FormBuilder, private minigameService: MinigameService) {
@@ -37,56 +26,52 @@ export class AnkiGame {
   }
 
   onSubmit() {
-    if (this.ankiForm.valid) {
-      const { sourceLanguage, targetLanguage } = this.ankiForm.value;
+    if (!this.ankiForm.valid) return;
+    const { sourceLanguage, targetLanguage } = this.ankiForm.value;
 
-      // Call the service to initialize the Anki game
-      this.minigameService.initializeAnkiGame({ sourceLanguage, targetLanguage }).subscribe({
-        next: (response) => {
-          this.AnkiDeckCards = response as AnkiCardResponse[];
-          this.isGameInitialized = true;
-          this.nextAnkiCard(); // Fetch the first Anki card after initialization
-          console.log('Form Data:', { sourceLanguage, targetLanguage });
-        },
-        error: (err) => {
-          console.error('Error initializing Anki game:', err);
-        }
-      });
-    }
+    // сброс на случай, если инстанс компонента переиспользуется без пересоздания
+    this.isGameFinished = false;
+    this.ankiCard = null;
+    this.lastReviewedCard = null;
+
+    this.minigameService.initializeAnkiGame({ sourceLanguage, targetLanguage }).subscribe({
+      next: () => {
+        this.isGameInitialized = true;
+        this.nextAnkiCard();
+      },
+      error: (err) => console.error('Error initializing Anki game:', err),
+    });
   }
-  // ~FormGroup
 
   nextAnkiCard() {
     this.minigameService.nextAnkiCard().subscribe({
-      next: (response: any) => {
+      next: (response) => {
+        if (!response) {
+          this.isGameFinished = true;
+          this.ankiCard = null;
+          return;
+        }
         this.ankiCard = response as AnkiCardResponse;
-        this.isLastCardSame(); // Check if the last card is the same as the current one
-        console.log('Next Anki Card:', this.ankiCard);
       },
-      error: (err) => console.error('Error:', err),
+      error: () => {
+        this.isGameFinished = true;
+        this.ankiCard = null;
+      },
     });
   }
 
   reviewAnkiCard(id: string, rating: number) {
     this.minigameService.reviewAnkiCard(id, rating).subscribe({
       next: (response) => {
-        console.log('Card reviewed successfully:', response);
-        this.nextAnkiCard(); // Fetch the next Anki card after reviewing the current one
+        this.lastReviewedCard = response as AnkiCardResponse;
+        this.nextAnkiCard();
       },
       error: (err) => console.error('Error reviewing card:', err),
     });
   }
 
-  // Auxiliary function to format the date for display
   formatingData(data: string): string {
     const date = new Date(data);
-
-    const formatted = date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-
-    return formatted;
+    return date.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
   }
 }

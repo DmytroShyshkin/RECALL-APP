@@ -20,24 +20,24 @@
         </form>
     </section>
 </div>
-}@else if (isGameInitialized && !isLastCardSame()) {
+}@if (!isGameInitialized) {
+  <!-- форма без изменений -->
+} @else if (isGameFinished) {
+<div class="anki-final-container">
+    <img src="..." alt="Congratulations" width="200" height="200">
+    <p>Congratulations! You've completed the Anki-style game. Next review at {{ formatingData(lastReviewedCard?.nextReviewAt || '') }}</p>
+</div>
+} @else if (ankiCard) {
 <div class="anki-game-container">
     <div class="card">
-        <p>{{ ankiCard?.word }}</p>
-        @for (translation of ankiCard?.translations; track $index) {
+        <p>{{ ankiCard.word }}</p>
+        @for (translation of ankiCard.translations; track $index) {
         <p>{{ translation }}</p>
         }
     </div>
-
     <div class="button-group">
-        <button class="btn btn-danger" (click)="reviewAnkiCard(ankiCard?.id || '', 1)">Forget</button>
-        <button class="btn btn-success" (click)="reviewAnkiCard(ankiCard?.id || '', 3)">Remember</button>
+        <button class="btn btn-danger" (click)="reviewAnkiCard(ankiCard.id, 1)">Forget</button>
+        <button class="btn btn-success" (click)="reviewAnkiCard(ankiCard.id, 3)">Remember</button>
     </div>
-</div>
-}@else if (isLastCardSame()) {
-<div class="anki-final-container">
-    <img src="https://www.clipartmax.com/png/middle/42-421482_embed-this-clipart-green-check-mark-transparent.png"
-        alt="Congratulations" width="200" height="200">
-    <p>Congratulations! You've completed the Anki-style game. Next review at {{ formatingData(ankiCard?.nextReviewAt || '') }}</p>
 </div>
 }

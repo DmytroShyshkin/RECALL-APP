@@ -4,7 +4,7 @@
         <div class="statGrid">
             @for (item of wordStatistics; track item.wordId) {
             <div class="statInfo">
-                <p><b>Word</b>: {{ item.wordId }}</p>
+                <p><b>Word</b>: {{ item.word }}</p>
                 <p><b>Total Reviews</b>: {{ item.totalReviews }}</p>
                 <p><b>Correct Reviews</b>: {{ item.correctReviews }}</p>
                 <p><b>Lapses</b>: {{ item.lapses }}</p>
