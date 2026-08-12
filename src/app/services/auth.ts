@@ -13,7 +13,7 @@ export class AuthService {
 
   private apiUrl = environment.apiUrl;
 
-  // BehaviorSubject хранит текущее значение и отдаёт его новым подписчикам
+  // BehaviorSubject stores the current value and passes it on to new subscribers
   private loggedIn = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
   
   // public Observable for components to subscribe to
@@ -22,11 +22,15 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(email: string, password: string) {
-    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/auth/login`, { email, password });
+    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/auth/login`, { email, password, withCredentials: true });
   }
 
   register(username: string, email: string, password: string) {
     return this.http.post<{ accessToken: string }>(`${this.apiUrl}/auth/register`, { email, password, username });
+  }
+
+  refresh() {
+    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/auth/refresh`, {}, { withCredentials: true });
   }
 
   setToken(token: string) {
