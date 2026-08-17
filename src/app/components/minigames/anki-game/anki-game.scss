@@ -72,25 +72,26 @@ form {
 }
 
 section {
-    border: 2px solid var(--color-border-hi);
-    background: var(--color-surface);
     padding: 2rem;
     border-radius: 8px;
-    width: 400px;
+    width: 100%;
+    max-width: 100%;
 }
 
 .labelContainer {
     display: flex;
     justify-content: space-between;
-    gap: 2rem; /* было 8rem — слишком много */
+    gap: 2rem;
 
     div {
         display: flex;
         flex-direction: column;
+
+        flex-basis: 0;
+        flex-grow: 1;
     }
 
     input {
-        min-width: 180px;
         max-width: 300px;
         width: 100%;
         padding: 0.75rem;
@@ -99,6 +100,7 @@ section {
         background: var(--color-surface-hi);
         color: var(--color-text-hi);
         font-size: 0.9rem;
+
 
         &:focus {
             outline: none;
