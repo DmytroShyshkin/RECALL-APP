@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslationDTO } from '../../../models/translations/translations.model';
-import { PageResponse, WordsDTO } from '../../../models/words/words.model';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Words } from '../../../services/words/words';
+import { PageResponse, WordsDTO } from '../../../models/words/words.model';
+import { TranslationDTO } from '../../../models/translations/translations.model';
 
 @Component({
   selector: 'app-word-card',
@@ -22,6 +22,7 @@ export class WordCard implements OnInit {
   selectedWord: WordsDTO | null = null;
   editForm: FormGroup;
   addWordForm: FormGroup;
+  selectedSynonymId = '';
 
   constructor(private wordsService: Words, private fb: FormBuilder) {
     this.editForm = this.fb.group({
@@ -82,12 +83,14 @@ export class WordCard implements OnInit {
       translations: this.fb.array(translationGroups)
     });
 
+    this.selectedSynonymId = '';
     this.isModalOpen = true;
   }
 
   closeEdit() {
     this.isModalOpen = false;
     this.selectedWord = null;
+    this.selectedSynonymId = '';
   }
 
   onSave() {
@@ -156,6 +159,51 @@ export class WordCard implements OnInit {
 
     this.translationsArray.removeAt(index);
   }
+
+  // Resolves a synonym id (from WordsDTO.synonymIds) to the actual word,
+  // so we can show its text instead of a bare UUID.
+  getSynonymWord(synonymId: string): WordsDTO | undefined {
+    return this.pageResponse?.content.find(w => w.id === synonymId);
+  }
+
+  // Words that can still be added as a synonym of the word being edited:
+  // everything except itself and words that are already linked.
+  get availableSynonymCandidates(): WordsDTO[] {
+    if (!this.selectedWord || !this.pageResponse) return [];
+    return this.pageResponse.content.filter(w =>
+      w.id !== this.selectedWord!.id &&
+      !this.selectedWord!.synonymIds?.includes(w.id)
+    );
+  }
+
+  addSynonymToSelected() {
+    if (!this.selectedWord || !this.selectedSynonymId) return;
+
+    const wordId = this.selectedWord.id;
+    const synonymId = this.selectedSynonymId;
+
+    this.wordsService.addSynonym(wordId, synonymId).subscribe({
+      next: () => {
+        this.selectedWord!.synonymIds = [...(this.selectedWord!.synonymIds || []), synonymId];
+        this.selectedSynonymId = '';
+      },
+      error: (err) => console.error('Error adding synonym:', err)
+    });
+  }
+
+  removeSynonymFromSelected(synonymId: string) {
+    if (!this.selectedWord) return;
+
+    const wordId = this.selectedWord.id;
+
+    this.wordsService.removeSynonym(wordId, synonymId).subscribe({
+      next: () => {
+        this.selectedWord!.synonymIds = (this.selectedWord!.synonymIds || []).filter(id => id !== synonymId);
+      },
+      error: (err) => console.error('Error removing synonym:', err)
+    });
+  }
+
   openAddWord() {
     this.addWordForm = this.fb.group({
       originalWord: ['', Validators.required],
@@ -233,5 +281,5 @@ export class WordCard implements OnInit {
     }
     const h = Math.abs(hash) % 360;
     return `hsla(${h}, 60%, 40%, 0.15)`;
-  } 
+  }
 }

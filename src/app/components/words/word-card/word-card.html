@@ -36,6 +36,14 @@
         }
       </div>
       }
+      @if (word.synonymIds?.length) {
+      <div class="word-synonyms">
+        <span class="synonyms-label">Synonyms:</span>
+        @for (synId of word.synonymIds; track synId) {
+        <span class="synonym-tag">{{ getSynonymWord(synId)?.originalWord ?? '…' }}</span>
+        }
+      </div>
+      }
       <div class="word-actions">
         <button class="btn btn-secondary btn-sm" (click)="openEdit(word)">Edit</button>
         <button class="btn btn-danger btn-sm" (click)="deleteWord(word.id)">Delete</button>
@@ -87,6 +95,32 @@
       </div>
       <button class="btn btn-ghost btn-sm" type="button" (click)="addTranslation()">+ Add Translation</button>
     </form>
+
+    <hr class="divider">
+    <p class="modal-section-title">Synonyms</p>
+
+    <div class="synonyms-list">
+      @for (synId of selectedWord.synonymIds; track synId) {
+      <span class="synonym-chip">
+        {{ getSynonymWord(synId)?.originalWord ?? '…' }}
+        <button type="button" class="chip-remove" (click)="removeSynonymFromSelected(synId)">×</button>
+      </span>
+      } @empty {
+      <p class="no-synonyms">No synonyms yet.</p>
+      }
+    </div>
+
+    <div class="synonym-add">
+      <select [(ngModel)]="selectedSynonymId" [ngModelOptions]="{standalone: true}" class="synonym-select">
+        <option value="">Select a word...</option>
+        @for (candidate of availableSynonymCandidates; track candidate.id) {
+        <option [value]="candidate.id">{{ candidate.originalWord }} ({{ candidate.sourceLanguage }})</option>
+        }
+      </select>
+      <button class="btn btn-ghost btn-sm" type="button" (click)="addSynonymToSelected()"
+        [disabled]="!selectedSynonymId">+ Add Synonym</button>
+    </div>
+
     <div class="modal-actions">
       <button class="btn btn-primary" (click)="onSave()">Save</button>
       <button class="btn btn-secondary" (click)="closeEdit()">Cancel</button>
@@ -150,4 +184,5 @@
       <button class="btn btn-secondary" (click)="closeAddWord()">Cancel</button>
     </div>
   </div>
-</div>}
+</div>
+}

@@ -5,7 +5,7 @@ export interface WordsDTO {
   id: string;
   sourceLanguage: string;
   originalWord: string;
-  synonymIds: string[];
+  synonymIds?: string[];
   translations?: TranslationDTO[];
 }
 

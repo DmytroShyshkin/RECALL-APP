@@ -299,6 +299,83 @@ input {
   }
 }
 
+.word-synonyms {
+  margin-top: 0.5rem;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+
+  .synonyms-label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    background: transparent;
+  }
+
+  .synonym-tag {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    background: transparent;
+    padding: 0.3rem 0.6rem;
+    border: 1px dashed var(--color-accent);
+    border-radius: 999px;
+  }
+}
+
+.synonyms-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.synonym-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  background: transparent;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+
+  .chip-remove {
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+
+    &:hover {
+      color: var(--color-danger, #d9534f);
+    }
+  }
+}
+
+.no-synonyms {
+  color: var(--color-text-muted);
+  background: transparent;
+  font-size: 0.85rem;
+}
+
+.synonym-add {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  .synonym-select {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+}
+
 .word-actions {
   display: flex;
   gap: 0.5rem;
@@ -308,4 +385,5 @@ input {
 .no-words {
   color: var(--color-text-muted);
   grid-column: 1 / -1;
-  text-align: center;}
+  text-align: center;
+}
