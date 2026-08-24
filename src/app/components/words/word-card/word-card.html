@@ -62,63 +62,73 @@
 <div class="modal-overlay" (click)="closeEdit()">
   <div class="modal" (click)="$event.stopPropagation()">
     <h2>Edit Word</h2>
-    <form [formGroup]="editForm">
-      <div class="modal-field">
-        <label>Word</label>
-        <input type="text" formControlName="originalWord">
-      </div>
-      <div class="modal-field">
-        <label>Language</label>
-        <input type="text" formControlName="sourceLanguage">
-      </div>
 
-      <hr class="divider">
-      <p class="modal-section-title">Translations</p>
-
-
-      <div formArrayName="translations" class="translations-scroll">
-        @for (t of translationsArray.controls; track $index) {
-        <div class="translation-group-container">
-          <div [formGroupName]="$index" class="translation-group">
-            <input type="text" formControlName="translatedWord" placeholder="Translation">
-            <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
+    <div class="modal-body">
+      <form [formGroup]="editForm">
+        <div class="modal-fields-row">
+          <div class="modal-field">
+            <label>Word</label>
+            <input type="text" formControlName="originalWord">
           </div>
-          <div [formGroupName]="$index" class="translation-group">
-            <textarea formControlName="description" placeholder="Description (optional)"
-              class="description-field"></textarea>
-          </div>
-          <div [formGroupName]="$index" class="translation-group">
-            <button class="btn btn-danger btn-sm" type="button" (click)="removeTranslation($index)">Remove</button>
+          <div class="modal-field">
+            <label>Language</label>
+            <input type="text" formControlName="sourceLanguage">
           </div>
         </div>
-        }
-      </div>
-      <button class="btn btn-ghost btn-sm" type="button" (click)="addTranslation()">+ Add Translation</button>
-    </form>
 
-    <hr class="divider">
-    <p class="modal-section-title">Synonyms</p>
+        <hr class="divider">
 
-    <div class="synonyms-list">
-      @for (synId of selectedWord.synonymIds; track synId) {
-      <span class="synonym-chip">
-        {{ getSynonymWord(synId)?.originalWord ?? '…' }}
-        <button type="button" class="chip-remove" (click)="removeSynonymFromSelected(synId)">×</button>
-      </span>
-      } @empty {
-      <p class="no-synonyms">No synonyms yet.</p>
-      }
-    </div>
+        <div class="modal-sections-row">
+          <div class="modal-section">
+            <p class="modal-section-title">Translations</p>
 
-    <div class="synonym-add">
-      <select [(ngModel)]="selectedSynonymId" [ngModelOptions]="{standalone: true}" class="synonym-select">
-        <option value="">Select a word...</option>
-        @for (candidate of availableSynonymCandidates; track candidate.id) {
-        <option [value]="candidate.id">{{ candidate.originalWord }} ({{ candidate.sourceLanguage }})</option>
-        }
-      </select>
-      <button class="btn btn-ghost btn-sm" type="button" (click)="addSynonymToSelected()"
-        [disabled]="!selectedSynonymId">+ Add Synonym</button>
+            <div formArrayName="translations" class="translations-scroll">
+              @for (t of translationsArray.controls; track $index) {
+              <div class="translation-group-container">
+                <div [formGroupName]="$index" class="translation-group">
+                  <input type="text" formControlName="translatedWord" placeholder="Translation">
+                  <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
+                </div>
+                <div [formGroupName]="$index" class="translation-group">
+                  <textarea formControlName="description" placeholder="Description (optional)"
+                    class="description-field"></textarea>
+                </div>
+                <div [formGroupName]="$index" class="translation-group">
+                  <button class="btn btn-danger btn-sm" type="button" (click)="removeTranslation($index)">Remove</button>
+                </div>
+              </div>
+              }
+            </div>
+            <button class="btn btn-ghost btn-sm" type="button" (click)="addTranslation()">+ Add Translation</button>
+          </div>
+
+          <div class="modal-section">
+            <p class="modal-section-title">Synonyms</p>
+
+            <div class="synonyms-list">
+              @for (synId of selectedWord.synonymIds; track synId) {
+              <span class="synonym-chip">
+                {{ getSynonymWord(synId)?.originalWord ?? '…' }}
+                <button type="button" class="chip-remove" (click)="removeSynonymFromSelected(synId)">×</button>
+              </span>
+              } @empty {
+              <p class="no-synonyms">No synonyms yet.</p>
+              }
+            </div>
+
+            <div class="synonym-add">
+              <select [(ngModel)]="selectedSynonymId" [ngModelOptions]="{standalone: true}" class="synonym-select">
+                <option value="">Select a word...</option>
+                @for (candidate of availableSynonymCandidates; track candidate.id) {
+                <option [value]="candidate.id">{{ candidate.originalWord }} ({{ candidate.sourceLanguage }})</option>
+                }
+              </select>
+              <button class="btn btn-ghost btn-sm" type="button" (click)="addSynonymToSelected()"
+                [disabled]="!selectedSynonymId">+ Add Synonym</button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
 
     <div class="modal-actions">
@@ -133,52 +143,75 @@
 <div class="modal-overlay" (click)="closeAddWord()">
   <div class="modal" (click)="$event.stopPropagation()">
     <h2>Add Word</h2>
-    <form [formGroup]="addWordForm">
-      <div class="modal-field">
-        <label>Word</label>
-        <input type="text" formControlName="originalWord">
-      </div>
-      <div class="modal-field">
-        <label>Language</label>
-        <input type="text" formControlName="sourceLanguage" placeholder="e.g. en">
-      </div>
 
-      <hr class="divider">
-      <p class="modal-section-title">Translations</p>
-
-      <!--
-      <div formArrayName="translations">
-        @for (t of addTranslationsArray.controls; track $index) {
-        <div [formGroupName]="$index" class="translation-group">
-          <input type="text" formControlName="translatedWord" placeholder="Translation">
-          <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
-          <textarea formControlName="description" placeholder="Description (optional)"
-            class="description-field"></textarea>
-          <button class="btn btn-danger btn-sm" type="button" (click)="removeNewTranslation($index)">Remove</button>
-        </div>
-        }
-      </div>
-      -->
-      <div formArrayName="translations" class="translations-scroll">
-        @for (t of addTranslationsArray.controls; track $index) {
-        <div class="translation-group-container">
-          <div [formGroupName]="$index" class="translation-group">
-            <input type="text" formControlName="translatedWord" placeholder="Translation">
-            <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
+    <div class="modal-body">
+      <form [formGroup]="addWordForm">
+        <div class="modal-fields-row">
+          <div class="modal-field">
+            <label>Word</label>
+            <input type="text" formControlName="originalWord">
           </div>
-          <div [formGroupName]="$index" class="translation-group">
-            <textarea formControlName="description" placeholder="Description (optional)"
-              class="description-field"></textarea>
-          </div>
-          <div [formGroupName]="$index" class="translation-group">
-            <button class="btn btn-danger btn-sm" type="button" (click)="removeNewTranslation($index)">Remove</button>
+          <div class="modal-field">
+            <label>Language</label>
+            <input type="text" formControlName="sourceLanguage" placeholder="e.g. en">
           </div>
         </div>
-        }
-      </div>
-      
-      <button class="btn btn-ghost btn-sm" type="button" (click)="addNewTranslation()">+ Add Translation</button>
-    </form>
+
+        <hr class="divider">
+
+        <div class="modal-sections-row">
+          <div class="modal-section">
+            <p class="modal-section-title">Translations</p>
+
+            <div formArrayName="translations" class="translations-scroll">
+              @for (t of addTranslationsArray.controls; track $index) {
+              <div class="translation-group-container">
+                <div [formGroupName]="$index" class="translation-group">
+                  <input type="text" formControlName="translatedWord" placeholder="Translation">
+                  <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
+                </div>
+                <div [formGroupName]="$index" class="translation-group">
+                  <textarea formControlName="description" placeholder="Description (optional)"
+                    class="description-field"></textarea>
+                </div>
+                <div [formGroupName]="$index" class="translation-group">
+                  <button class="btn btn-danger btn-sm" type="button" (click)="removeNewTranslation($index)">Remove</button>
+                </div>
+              </div>
+              }
+            </div>
+            <button class="btn btn-ghost btn-sm" type="button" (click)="addNewTranslation()">+ Add Translation</button>
+          </div>
+
+          <div class="modal-section">
+            <p class="modal-section-title">Synonyms</p>
+
+            <div class="synonyms-list">
+              @for (synId of addWordSynonymIds; track synId) {
+              <span class="synonym-chip">
+                {{ getSynonymWord(synId)?.originalWord ?? '…' }}
+                <button type="button" class="chip-remove" (click)="removeSynonymFromNewWord(synId)">×</button>
+              </span>
+              } @empty {
+              <p class="no-synonyms">No synonyms yet.</p>
+              }
+            </div>
+
+            <div class="synonym-add">
+              <select [(ngModel)]="selectedAddSynonymId" [ngModelOptions]="{standalone: true}" class="synonym-select">
+                <option value="">Select a word...</option>
+                @for (candidate of availableAddSynonymCandidates; track candidate.id) {
+                <option [value]="candidate.id">{{ candidate.originalWord }} ({{ candidate.sourceLanguage }})</option>
+                }
+              </select>
+              <button class="btn btn-ghost btn-sm" type="button" (click)="addSynonymToNewWord()"
+                [disabled]="!selectedAddSynonymId">+ Add Synonym</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
     <div class="modal-actions">
       <button class="btn btn-primary" (click)="onAddWord()">Add</button>
       <button class="btn btn-secondary" (click)="closeAddWord()">Cancel</button>

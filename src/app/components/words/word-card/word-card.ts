@@ -23,6 +23,8 @@ export class WordCard implements OnInit {
   editForm: FormGroup;
   addWordForm: FormGroup;
   selectedSynonymId = '';
+  addWordSynonymIds: string[] = [];
+  selectedAddSynonymId = '';
 
   constructor(private wordsService: Words, private fb: FormBuilder) {
     this.editForm = this.fb.group({
@@ -210,11 +212,32 @@ export class WordCard implements OnInit {
       sourceLanguage: ['', Validators.required],
       translations: this.fb.array([])
     });
+    this.addWordSynonymIds = [];
+    this.selectedAddSynonymId = '';
     this.isAddModalOpen = true;
   }
 
   closeAddWord() {
     this.isAddModalOpen = false;
+    this.addWordSynonymIds = [];
+    this.selectedAddSynonymId = '';
+  }
+
+  // Words that can be picked as a synonym of the word being created.
+  // The new word has no id yet, so we only need to exclude what's already picked.
+  get availableAddSynonymCandidates(): WordsDTO[] {
+    if (!this.pageResponse) return [];
+    return this.pageResponse.content.filter(w => !this.addWordSynonymIds.includes(w.id));
+  }
+
+  addSynonymToNewWord() {
+    if (!this.selectedAddSynonymId) return;
+    this.addWordSynonymIds = [...this.addWordSynonymIds, this.selectedAddSynonymId];
+    this.selectedAddSynonymId = '';
+  }
+
+  removeSynonymFromNewWord(synonymId: string) {
+    this.addWordSynonymIds = this.addWordSynonymIds.filter(id => id !== synonymId);
   }
 
   onAddWord() {
@@ -223,24 +246,36 @@ export class WordCard implements OnInit {
 
     this.wordsService.createWord({ originalWord, sourceLanguage }).subscribe({
       next: (word: any) => {
-        const pending = (translations || []).filter((t: any) => t.translatedWord);
-        if (pending.length === 0) {
+        const pendingTranslations = (translations || []).filter((t: any) => t.translatedWord);
+        const pendingSynonymIds = this.addWordSynonymIds;
+        const totalPending = pendingTranslations.length + pendingSynonymIds.length;
+
+        if (totalPending === 0) {
           this.loadWords();
           this.closeAddWord();
           return;
         }
 
         let completed = 0;
-        pending.forEach((t: any) => {
+        const onOneDone = () => {
+          completed++;
+          if (completed === totalPending) {
+            this.loadWords();
+            this.closeAddWord();
+          }
+        };
+
+        pendingTranslations.forEach((t: any) => {
           this.wordsService.addTranslation(word.id, t).subscribe({
-            next: () => {
-              completed++;
-              if (completed === pending.length) {
-                this.loadWords();
-                this.closeAddWord();
-              }
-            },
-            error: (err) => console.error(err)
+            next: onOneDone,
+            error: (err) => { console.error(err); onOneDone(); }
+          });
+        });
+
+        pendingSynonymIds.forEach((synonymId: string) => {
+          this.wordsService.addSynonym(word.id, synonymId).subscribe({
+            next: onOneDone,
+            error: (err) => { console.error(err); onOneDone(); }
           });
         });
       },
