@@ -29,7 +29,7 @@
   --color-error:       #E53E3E;
 }
 
-* {
+*, *::before, *::after {
   font-family: "Ubuntu", sans-serif;
   color: var(--color-text);
 }
