@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Words } from '../../../services/words/words';
-import { PageResponse, WordsDTO } from '../../../models/words/words.model';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslationDTO } from '../../../models/translations/translations.model';
+import { PageResponse, WordsDTO } from '../../../models/words/words.model';
+import { Words } from '../../../services/words/words';
 
 @Component({
   selector: 'app-word-card',
@@ -233,5 +233,5 @@ export class WordCard implements OnInit {
     }
     const h = Math.abs(hash) % 360;
     return `hsla(${h}, 60%, 40%, 0.15)`;
-  }
+  } 
 }
