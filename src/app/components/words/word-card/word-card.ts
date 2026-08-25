@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { Words } from '../../../services/words/words';
-import { PageResponse, WordsDTO } from '../../../models/words/words.model';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { TranslationDTO } from '../../../models/translations/translations.model';
+import { PageResponse, WordsDTO } from '../../../models/words/words.model';
+import { Words } from '../../../services/words/words';
 
 @Component({
   selector: 'app-word-card',
@@ -248,36 +250,33 @@ export class WordCard implements OnInit {
       next: (word: any) => {
         const pendingTranslations = (translations || []).filter((t: any) => t.translatedWord);
         const pendingSynonymIds = this.addWordSynonymIds;
-        const totalPending = pendingTranslations.length + pendingSynonymIds.length;
 
-        if (totalPending === 0) {
+        if (pendingTranslations.length === 0 && pendingSynonymIds.length === 0) {
           this.loadWords();
           this.closeAddWord();
           return;
         }
 
-        let completed = 0;
-        const onOneDone = () => {
-          completed++;
-          if (completed === totalPending) {
+        const translationRequests = pendingTranslations.map((t: any) =>
+          this.wordsService.addTranslation(word.id, t).pipe(
+            catchError(err => { console.error(err); return of(null); })
+          )
+        );
+
+        const synonymRequests = pendingSynonymIds.map(id =>
+          this.wordsService.addSynonym(word.id, id).pipe(
+            catchError(err => { console.error(err); return of(null); })
+          )
+        );
+
+        const allRequests = [...translationRequests, ...synonymRequests];
+
+        forkJoin(allRequests).subscribe({
+          next: () => {
             this.loadWords();
             this.closeAddWord();
           }
-        };
-
-        pendingTranslations.forEach((t: any) => {
-          this.wordsService.addTranslation(word.id, t).subscribe({
-            next: onOneDone,
-            error: (err) => { console.error(err); onOneDone(); }
-          });
-        });
-
-        pendingSynonymIds.forEach((synonymId: string) => {
-          this.wordsService.addSynonym(word.id, synonymId).subscribe({
-            next: onOneDone,
-            error: (err) => { console.error(err); onOneDone(); }
-          });
-        });
+        })
       },
       error: (err) => console.error(err)
     });
