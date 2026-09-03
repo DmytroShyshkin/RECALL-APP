@@ -1,8 +1,14 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from '../environment';
+
+export interface RegisterResponse {
+  email: string;
+  username: string;
+  role: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +32,7 @@ export class AuthService {
   }
 
   register(username: string, email: string, password: string) {
-    return this.http.post<{ accessToken: string }>(`${this.apiUrl}/auth/register`, { email, password, username });
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/auth/register`, { email, password, username });
   }
 
   refresh() {
