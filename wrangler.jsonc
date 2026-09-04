@@ -1,0 +1,8 @@
+{
+  "name": "recall-app",
+  "compatibility_date": "2026-09-04",
+  "assets": {
+    "directory": "./dist/lenguage-learning-api-web/browser",
+    "not_found_handling": "single-page-application"
+  }
+}
