@@ -16,7 +16,7 @@ export class Verify implements OnInit {
 
   ngOnInit() {
     const token = this.route.snapshot.queryParams['token'];
-    this.http.get(`${environment.apiUrl}/auth/verify?token=${token}`, { responseType: 'text' }).subscribe({
+    this.http.get(`${environment.apiUrl}/auth/verify-email?token=${token}`, { responseType: 'text' }).subscribe({
       next: () => {
         this.message = 'Email verified! Redirecting...';
         setTimeout(
