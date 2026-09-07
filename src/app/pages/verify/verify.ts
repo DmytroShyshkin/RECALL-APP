@@ -1,6 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environment';
 
 @Component({
   selector: 'app-verify',
@@ -15,7 +16,7 @@ export class Verify implements OnInit {
 
   ngOnInit() {
     const token = this.route.snapshot.queryParams['token'];
-    this.http.get(`http://localhost:8080/auth/verify?token=${token}`, { responseType: 'text' }).subscribe({
+    this.http.get(`${environment.apiUrl}/auth/verify?token=${token}`, { responseType: 'text' }).subscribe({
       next: () => {
         this.message = 'Email verified! Redirecting...';
         setTimeout(
