@@ -1,5 +1,5 @@
 <h1>Anki-Style Game</h1>
-@if(!isGameInitialized){
+@if (!isGameInitialized) {
 <div class="anki-form-container">
     <section>
         <form [formGroup]="ankiForm" (ngSubmit)="onSubmit()">
@@ -20,8 +20,6 @@
         </form>
     </section>
 </div>
-}@if (!isGameInitialized) {
-  <!-- форма без изменений -->
 } @else if (isGameFinished) {
 <div class="anki-final-container">
     <img src="..." alt="Congratulations" width="200" height="200">
@@ -41,4 +39,5 @@
         <button class="btn btn-success" (click)="reviewAnkiCard(ankiCard.id, 3)">Good</button>
         <button class="btn btn-success" (click)="reviewAnkiCard(ankiCard.id, 4)">Easy</button>
     </div>
+</div>
 }
