@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Minigames as MinigamesService } from '../../../services/minigames/minigames'
 import { QuizSessionResponse } from '../../../models/minigames/minagames.model'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Languages } from '../../../services/languages/languages';
+import { LanguagePicker } from '../../shared/language-picker/language-picker';
 
 @Component({
   selector: 'app-quiz-game',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LanguagePicker],
   templateUrl: './quiz-game.html',
   styleUrl: './quiz-game.scss',
 })
@@ -13,10 +15,11 @@ export class QuizGame implements OnInit {
 
   languages: string[] | null = null;
   wordCount: number | null = 4;
+  knownLanguages: string[] = [];
 
   quizForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private minigamesService: MinigamesService) {
+  constructor(private fb: FormBuilder, private minigamesService: MinigamesService, private languagesService: Languages) {
     this.quizForm = this.fb.group({
       languages: ['', Validators.required],
       wordCount: ['']
@@ -29,6 +32,11 @@ export class QuizGame implements OnInit {
   ngOnInit() {
     this.minigamesService.registerExitCallback(() => {
       this.exitQuizGame();
+    });
+
+    this.languagesService.getKnownLanguages().subscribe({
+      next: (languages) => this.knownLanguages = languages,
+      error: (err) => console.error('Error loading known languages:', err),
     });
   }
 

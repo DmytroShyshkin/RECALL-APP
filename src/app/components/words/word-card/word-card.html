@@ -72,7 +72,7 @@
           </div>
           <div class="modal-field">
             <label>Language</label>
-            <input type="text" formControlName="sourceLanguage">
+            <app-language-picker formControlName="sourceLanguage" [options]="knownLanguages"></app-language-picker>
           </div>
         </div>
 
@@ -87,7 +87,7 @@
               <div class="translation-group-container">
                 <div [formGroupName]="$index" class="translation-group">
                   <input type="text" formControlName="translatedWord" placeholder="Translation">
-                  <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
+                  <app-language-picker formControlName="targetLanguage" [options]="knownLanguages" placeholder="e.g. en"></app-language-picker>
                 </div>
                 <div [formGroupName]="$index" class="translation-group">
                   <textarea formControlName="description" placeholder="Description (optional)"
@@ -153,7 +153,7 @@
           </div>
           <div class="modal-field">
             <label>Language</label>
-            <input type="text" formControlName="sourceLanguage" placeholder="e.g. en">
+            <app-language-picker formControlName="sourceLanguage" [options]="knownLanguages" placeholder="e.g. en"></app-language-picker>
           </div>
         </div>
 
@@ -168,7 +168,7 @@
               <div class="translation-group-container">
                 <div [formGroupName]="$index" class="translation-group">
                   <input type="text" formControlName="translatedWord" placeholder="Translation">
-                  <input type="text" formControlName="targetLanguage" placeholder="e.g. en">
+                  <app-language-picker formControlName="targetLanguage" [options]="knownLanguages" placeholder="e.g. en"></app-language-picker>
                 </div>
                 <div [formGroupName]="$index" class="translation-group">
                   <textarea formControlName="description" placeholder="Description (optional)"

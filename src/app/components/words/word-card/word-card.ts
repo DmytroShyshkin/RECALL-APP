@@ -5,10 +5,12 @@ import { catchError } from 'rxjs/operators';
 import { TranslationDTO } from '../../../models/translations/translations.model';
 import { PageResponse, WordsDTO } from '../../../models/words/words.model';
 import { Words } from '../../../services/words/words';
+import { Languages } from '../../../services/languages/languages';
+import { LanguagePicker } from '../../shared/language-picker/language-picker';
 
 @Component({
   selector: 'app-word-card',
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, LanguagePicker],
   templateUrl: './word-card.html',
   styleUrl: './word-card.scss',
 })
@@ -18,6 +20,7 @@ export class WordCard implements OnInit {
   pageSize = 50;
   searchQuery = '';
   selectedLanguage = '';
+  knownLanguages: string[] = [];
 
   isModalOpen = false;
   isAddModalOpen = false;
@@ -28,7 +31,7 @@ export class WordCard implements OnInit {
   addWordSynonymIds: string[] = [];
   selectedAddSynonymId = '';
 
-  constructor(private wordsService: Words, private fb: FormBuilder) {
+  constructor(private wordsService: Words, private languagesService: Languages, private fb: FormBuilder) {
     this.editForm = this.fb.group({
       originalWord: [''],
       sourceLanguage: ['']
@@ -42,6 +45,14 @@ export class WordCard implements OnInit {
 
   ngOnInit(): void {
     this.loadWords();
+    this.loadKnownLanguages();
+  }
+
+  loadKnownLanguages(): void {
+    this.languagesService.getKnownLanguages().subscribe({
+      next: (languages) => this.knownLanguages = languages,
+      error: (err) => console.error('Error loading known languages:', err),
+    });
   }
 
   loadWords(): void {
@@ -133,6 +144,7 @@ export class WordCard implements OnInit {
 
     setTimeout(() => {
       this.loadWords();
+      this.loadKnownLanguages();
       this.closeEdit();
     }, 300);
   }
@@ -253,6 +265,7 @@ export class WordCard implements OnInit {
 
         if (pendingTranslations.length === 0 && pendingSynonymIds.length === 0) {
           this.loadWords();
+          this.loadKnownLanguages();
           this.closeAddWord();
           return;
         }
@@ -274,6 +287,7 @@ export class WordCard implements OnInit {
         forkJoin(allRequests).subscribe({
           next: () => {
             this.loadWords();
+            this.loadKnownLanguages();
             this.closeAddWord();
           }
         })

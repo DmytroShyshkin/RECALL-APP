@@ -5,7 +5,7 @@
         <div class="labelContainer">
             <div>
                 <label for="languages">Languages:</label>
-                <input id="languages" name="languages" formControlName="languages" placeholder="Example: en, es">
+                <app-language-picker id="languages" formControlName="languages" [options]="knownLanguages" mode="multi-csv" placeholder="Example: en, es"></app-language-picker>
             </div>
             <div [hidden]="true">
                 <label for="wordCount">Word Count:</label>

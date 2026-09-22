@@ -6,11 +6,11 @@
             <div class="labelContainer">
                 <div>
                     <label for="sourceLanguage">Source Language:</label>
-                    <input id="sourceLanguage" formControlName="sourceLanguage" placeholder="Example: en">
+                    <app-language-picker id="sourceLanguage" formControlName="sourceLanguage" [options]="knownLanguages" placeholder="Example: en"></app-language-picker>
                 </div>
                 <div>
                     <label for="targetLanguage">Target Language:</label>
-                    <input id="targetLanguage" formControlName="targetLanguage" placeholder="Example: es">
+                    <app-language-picker id="targetLanguage" formControlName="targetLanguage" [options]="knownLanguages" placeholder="Example: es"></app-language-picker>
                 </div>
             </div>
 
@@ -22,8 +22,16 @@
 </div>
 } @else if (isGameFinished) {
 <div class="anki-final-container">
-    <img src="..." alt="Congratulations" width="200" height="200">
-    <p>Congratulations! You've completed the Anki-style game. Next review at {{ formatingData(lastReviewedCard?.nextReviewAt || '') }}</p>
+    <span class="success-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 13l4 4L19 7" stroke="#FFFDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </span>
+    @if (lastReviewedCard) {
+        <p>Congratulations! You've completed the Anki-style game. Next review at {{ formatingData(lastReviewedCard.nextReviewAt) }}</p>
+    } @else {
+        <p>Nothing to review right now — you're all caught up! Come back a bit later for your next session.</p>
+    }
 </div>
 } @else if (ankiCard) {
 <div class="anki-game-container">

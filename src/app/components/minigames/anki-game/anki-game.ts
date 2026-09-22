@@ -1,27 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Minigames as MinigameService } from '../../../services/minigames/minigames';
 import { AnkiCardResponse } from '../../../models/minigames/minagames.model'
+import { Languages } from '../../../services/languages/languages';
+import { LanguagePicker } from '../../shared/language-picker/language-picker';
 
 @Component({
   selector: 'app-anki-game',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LanguagePicker],
   templateUrl: './anki-game.html',
   styleUrl: './anki-game.scss',
 })
-export class AnkiGame {
+export class AnkiGame implements OnInit {
   isGameInitialized = false;
   isGameFinished = false;
 
   ankiCard: AnkiCardResponse | null = null;
   lastReviewedCard: AnkiCardResponse | null = null;
 
+  knownLanguages: string[] = [];
+
   ankiForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private minigameService: MinigameService) {
+  constructor(private fb: FormBuilder, private minigameService: MinigameService, private languagesService: Languages) {
     this.ankiForm = this.fb.group({
       sourceLanguage: ['', Validators.required],
       targetLanguage: ['', Validators.required],
+    });
+  }
+
+  ngOnInit() {
+    this.languagesService.getKnownLanguages().subscribe({
+      next: (languages) => this.knownLanguages = languages,
+      error: (err) => console.error('Error loading known languages:', err),
     });
   }
 
@@ -72,6 +83,7 @@ export class AnkiGame {
 
   formatingData(data: string): string {
     const date = new Date(data);
+    if (isNaN(date.getTime())) return '—';
     return date.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
   }
 }

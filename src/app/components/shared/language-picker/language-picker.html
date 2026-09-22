@@ -1,0 +1,29 @@
+<div class="language-picker">
+  <input
+    #inputEl
+    type="text"
+    [id]="id"
+    [value]="inputValue"
+    (input)="onInput(inputEl.value)"
+    (focus)="onFocus()"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    autocomplete="off">
+
+  @if (isOpen && options.length > 0) {
+    <ul class="language-picker-dropdown">
+      @for (option of filteredOptions; track option) {
+        <li
+          [class.is-selected]="isSelected(option)"
+          (mousedown)="$event.preventDefault(); selectOption(option)">
+          <span>{{ option }}</span>
+          @if (isSelected(option)) {
+            <span class="check">✓</span>
+          }
+        </li>
+      } @empty {
+        <li class="empty">No matches — keep typing</li>
+      }
+    </ul>
+  }
+</div>
