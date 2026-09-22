@@ -1,1 +1,85 @@
-<p>home works!</p>
+<main class="home">
+  <section class="hero page-container">
+    <div class="hero-copy">
+      <span class="eyebrow">Your personal vocabulary coach</span>
+      <h1>Learn words that <em>actually</em> stick.</h1>
+      <p class="hero-lead">
+        RECALL turns any word you come across into a lasting memory — build your own
+        lists, drill them with Anki-style spaced repetition, and put yourself to the
+        test with quizzes.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" routerLink="/register">Get started — it's free</a>
+        <a class="btn btn-secondary btn-lg" routerLink="/login">I already have an account</a>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="word-card word-card--back"></div>
+      <div class="word-card word-card--front">
+        <span class="word-card-label">Word</span>
+        <span class="word-card-term">ephemeral</span>
+        <span class="word-card-translation">lasting for a very short time</span>
+        <div class="word-card-rating">
+          <span>Again</span><span>Hard</span><span class="is-active">Good</span><span>Easy</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features page-container">
+    <h2>Everything you need to remember, not just memorize</h2>
+    <div class="feature-grid">
+      <article class="feature-card card">
+        <span class="feature-icon" aria-hidden="true">📚</span>
+        <h3>Build your own word lists</h3>
+        <p>Add any word you run into, attach translations and synonyms, and keep everything organized exactly the way you think about it.</p>
+      </article>
+      <article class="feature-card card">
+        <span class="feature-icon" aria-hidden="true">🔁</span>
+        <h3>Anki-style spaced repetition</h3>
+        <p>Review cards right before you're about to forget them. Rate each card 1–4 and RECALL schedules the next review for you.</p>
+      </article>
+      <article class="feature-card card">
+        <span class="feature-icon" aria-hidden="true">✅</span>
+        <h3>Put yourself to the test</h3>
+        <p>Start a quiz session, answer at your own pace, and see exactly where your vocabulary is strong — and where it isn't yet.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="steps page-container">
+    <h2>How it works</h2>
+    <ol class="step-list">
+      <li>
+        <span class="step-number">1</span>
+        <div>
+          <h3>Add words as you learn them</h3>
+          <p>Jot down new vocabulary the moment you meet it, with a translation and any context that helps it stick.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-number">2</span>
+        <div>
+          <h3>Review a little every day</h3>
+          <p>RECALL brings back the right cards at the right time, so a few minutes a day is all it takes.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-number">3</span>
+        <div>
+          <h3>Quiz yourself and track progress</h3>
+          <p>Check your stats, spot the words that keep slipping, and watch your vocabulary grow.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="cta page-container">
+    <div class="cta-card card">
+      <h2>Ready to remember what you learn?</h2>
+      <p>Create a free account and add your first word in under a minute.</p>
+      <a class="btn btn-primary btn-lg" routerLink="/register">Create my account</a>
+    </div>
+  </section>
+</main>

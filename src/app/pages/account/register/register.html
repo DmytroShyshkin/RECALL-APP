@@ -1,30 +1,48 @@
-<main class="container">
-    <h1>REGISTER</h1>
-    <section>
-        <form [formGroup]="authForm" (submit)="onSubmit()" class="auth-form">
-            <input formControlName="username" type="text" placeholder="Username">
-            @if(submitted && authForm.get('username')?.invalid) {
-                <div class="error">Username is required.</div>
-            }
-            <input formControlName="email" type="email" placeholder="Email">
-            @if(submitted && authForm.get('email')?.invalid) {
-                <div class="error">Please enter a valid email address.</div>
-            }
-            <input formControlName="password" type="password" placeholder="Password">
-            @if(submitted) {
-                @if(authForm.get('password')?.hasError('required')) {
-                    <div class="error">Password is required.</div>
-                } @else if (authForm.get('password')?.hasError('minlength')) {
-                    <div class="error">Password must be at least 8 characters long.</div>
-                }
-            }
-            @if(successMessage) {
-                <p class="success">{{ successMessage }}</p>
-            }
-            @if(errorMessage) {
-                <p class="error">{{ errorMessage }}</p>
-            }
-            <button class="btn btn-primary" [disabled]="!authForm.valid" type="submit">Register</button>
-        </form>
-    </section>
+<main class="auth-page">
+  <section class="auth-card card">
+    <span class="auth-eyebrow">Get started</span>
+    <h1>Create your account</h1>
+    <p class="auth-subtitle">It takes less than a minute — your first word list is next.</p>
+
+    <form [formGroup]="authForm" (submit)="onSubmit()" class="auth-form">
+      <div class="field">
+        <label for="register-username">Username</label>
+        <input id="register-username" formControlName="username" type="text" placeholder="Your username" autocomplete="username">
+        @if(submitted && authForm.get('username')?.invalid) {
+          <div class="error">Username is required.</div>
+        }
+      </div>
+
+      <div class="field">
+        <label for="register-email">Email</label>
+        <input id="register-email" formControlName="email" type="email" placeholder="you@example.com" autocomplete="email">
+        @if(submitted && authForm.get('email')?.invalid) {
+          <div class="error">Please enter a valid email address.</div>
+        }
+      </div>
+
+      <div class="field">
+        <label for="register-password">Password</label>
+        <input id="register-password" formControlName="password" type="password" placeholder="At least 8 characters" autocomplete="new-password">
+        @if(submitted) {
+          @if(authForm.get('password')?.hasError('required')) {
+            <div class="error">Password is required.</div>
+          } @else if (authForm.get('password')?.hasError('minlength')) {
+            <div class="error">Password must be at least 8 characters long.</div>
+          }
+        }
+      </div>
+
+      @if(successMessage) {
+        <p class="success">{{ successMessage }}</p>
+      }
+      @if(errorMessage) {
+        <p class="error">{{ errorMessage }}</p>
+      }
+
+      <button class="btn btn-primary btn-lg" [disabled]="!authForm.valid" type="submit">Create account</button>
+    </form>
+
+    <p class="auth-switch">Already have an account? <a routerLink="/login">Log in</a></p>
+  </section>
 </main>

@@ -1,29 +1,40 @@
 <header class="site-header">
-    <nav class="site-nav">
-        <h1 class="site-title" (click)="goToHome()">RECALL <span class="site-subtitle">Enables Contextual And Language Learning</span></h1>
-    </nav>
-
+  <div class="site-header-inner page-container">
+    <a class="brand" routerLink="/">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4.5C4 3.67 4.67 3 5.5 3H12V21H5.5C4.67 21 4 20.33 4 19.5V4.5Z" fill="var(--color-accent)"/>
+          <path d="M20 4.5C20 3.67 19.33 3 18.5 3H12V21H18.5C19.33 21 20 20.33 20 19.5V4.5Z" fill="var(--color-secondary)"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <span class="brand-name">RECALL</span>
+        <span class="brand-tagline">words that stick</span>
+      </span>
+    </a>
 
     <nav class="header-actions">
-        @if (isLoggedIn$ | async) {
-        <button class="btn btn-profile" (click)="toggleDropdown()">My Account ▾</button>
-
-        @if (dropdownOpen) {
-        <menu class="dropdown dropdown-account">
-            <button routerLink="/profile" class="btn btn-primary" (click)="closeDropdown()">Profile</button>
-            <button routerLink="/settings" class="btn btn-primary" (click)="closeDropdown()">Settings</button>
-            <button class="btn btn-secondary" (click)="logout()">Logout</button>
-        </menu>
-        }
-        } @else {
-        <button class="btn btn-primary" (click)="toggleDropdown()">Login / Register</button>
-        @if (dropdownOpen) {
-        <menu class="dropdown login/register">
-            <button class="btn btn-secondary" (click)="goToLogin(); closeDropdown()">Login</button>
-            <button class="btn btn-secondary" (click)="goToRegister(); closeDropdown()">Register</button>
-        </menu>
-        }
-        }
-        <button class="btn btn-primary">Download</button>
+      @if (isLoggedIn$ | async) {
+        <div class="menu-wrap">
+          <button class="btn btn-secondary btn-sm menu-trigger" (click)="toggleDropdown()">
+            My account
+            <span class="chevron" [class.open]="dropdownOpen">⌄</span>
+          </button>
+          @if (dropdownOpen) {
+            <menu class="dropdown">
+              <button routerLink="/profile" (click)="closeDropdown()">Profile</button>
+              <button routerLink="/settings" (click)="closeDropdown()">Settings</button>
+              <hr>
+              <button class="dropdown-danger" (click)="logout()">Logout</button>
+            </menu>
+          }
+        </div>
+      } @else {
+        <div class="menu-wrap">
+          <button class="btn btn-secondary btn-sm" (click)="goToLogin()">Login</button>
+          <button class="btn btn-primary btn-sm" (click)="goToRegister()">Register</button>
+        </div>
+      }
     </nav>
+  </div>
 </header>

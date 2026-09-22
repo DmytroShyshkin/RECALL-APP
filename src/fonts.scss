@@ -1,47 +1,15 @@
-.ubuntu-light {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 300;
-  font-style: normal;
-}
+/*
+  RECALL type system — two families, loaded via Google Fonts in index.html:
 
-.ubuntu-regular {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
+  --font-display  Fraunces   warm editorial serif, used for headings and
+                              anything that should feel like a hand-picked
+                              headline rather than UI chrome.
+  --font-body     Nunito Sans  friendly, rounded humanist sans, used for
+                              everything you actually read and interact with
+                              (paragraphs, labels, buttons, inputs).
+*/
 
-.ubuntu-medium {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 500;
-  font-style: normal;
-}
-
-.ubuntu-bold {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.ubuntu-light-italic {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.ubuntu-regular-italic {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.ubuntu-medium-italic {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.ubuntu-bold-italic {
-  font-family: "Ubuntu", sans-serif;
-  font-weight: 700;
-  font-style: italic;
+:root {
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Nunito Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }

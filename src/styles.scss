@@ -1,37 +1,94 @@
 @use './fonts.scss' as *;
 
+/* ==========================================================================
+   RECALL — design tokens
+   A warm, cozy "learner's notebook" palette: cream paper, terracotta ink,
+   soft sage for calm/success states. Every token below is referenced by
+   name across the app — keep the names stable even if the values change.
+   ========================================================================== */
 :root {
-  /* backgrounds */
-  --color-bg:          #111210;
-  --color-surface:     #1C1D1A;
-  --color-surface-hi:  #2C2D28;  /* светлее, для hover-поверхностей */
+  /* --- backgrounds ------------------------------------------------------ */
+  --color-bg:          #FBF3E4;  /* page background — warm cream */
+  --color-bg-alt:       #F3E6CD;  /* alternating section background */
+  --color-surface:     #FFFDF8;  /* cards, inputs, the header — warm paper white */
+  --color-surface-hi:  #FCEEDA;  /* hover/active surface (was "surface-hi" on dark theme, kept for compat) */
 
-  /* borders */
-  --color-border:      #2C2D28;
-  --color-border-hi:   #3C3D38;  /* ярче, для активных/focused границ */
+  /* --- borders ------------------------------------------------------------ */
+  --color-border:      #E8D8B8;
+  --color-border-hi:   #D6BB86;
 
-  /* accent — amber
-     dim  → тёмный фон под акцентный элемент (фон тега, чипа)
-     base → основной акцент (кнопки, прогресс-бар)
-     hi   → светлее, для hover и активных состояний          */
-  --color-accent-dim:  #412402;
-  --color-accent:      #BA7517;
-  --color-accent-hi:   #EF9F27;
+  /* --- accent — terracotta
+     dim  → soft tinted background for chips/badges/focus rings
+     base → primary accent (buttons, links, progress)
+     hi   → hover/active state. On this light theme "hi" means deeper, not
+            brighter — kept the same variable name for backward-compat with
+            every component that already reads --color-accent-hi.          */
+  --color-accent-dim:  #F4DFBD;
+  --color-accent:      #C1622E;
+  --color-accent-hi:   #A34F24;
 
-  /* text
-     muted → второстепенное: подписи, плейсхолдеры, счётчики
-     base  → основной текст
-     hi    → важный текст: заголовки карточек, слова           */
-  --color-text-muted:  #9A9890;
-  --color-text:        #FAC775;
-  --color-text-hi:     #FAEEDA;
+  /* --- secondary accent — sage, for calmer/positive states --------------- */
+  --color-secondary:      #6E8F6A;
+  --color-secondary-dim:  #E3EAD9;
+  --color-secondary-hi:   #57724F;
 
-  --color-error:       #E53E3E;
+  /* --- text
+     muted → captions, placeholders, counters
+     base  → body copy
+     hi    → headings, the words themselves                                */
+  --color-text-muted:  #8C7A5E;
+  --color-text:        #4A3B29;
+  --color-text-hi:     #2B2014;
+
+  --color-error:       #C1432B;
+  --color-danger:      var(--color-error); /* alias — some components read --color-danger */
+  --color-success:     var(--color-secondary-hi);
+
+  /* --- shape & elevation -------------------------------------------------- */
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(43, 32, 20, 0.06);
+  --shadow-md: 0 8px 24px -8px rgba(43, 32, 20, 0.18);
+  --shadow-lg: 0 20px 48px -16px rgba(43, 32, 20, 0.28);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  --max-width: 1120px;
 }
 
+/* ==========================================================================
+   Reset & base
+   ========================================================================== */
 *, *::before, *::after {
-  font-family: "Ubuntu", sans-serif;
+  box-sizing: border-box;
+  font-family: var(--font-body);
   color: var(--color-text);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(60rem 30rem at 90% -10%, rgba(193, 98, 46, 0.10), transparent 60%),
+    radial-gradient(50rem 26rem at -10% 0%, rgba(110, 143, 106, 0.08), transparent 55%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
 main {
@@ -40,119 +97,214 @@ main {
   align-items: center;
 }
 
-body {
-  background-color: var(--color-bg);
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-text-hi);
+  line-height: 1.15;
+  margin: 0 0 var(--space-4);
+  font-weight: 600;
 }
+
+h1 { font-size: clamp(2rem, 1.5rem + 2vw, 3.25rem); }
+h2 { font-size: clamp(1.5rem, 1.25rem + 1vw, 2.25rem); }
+h3 { font-size: 1.375rem; }
+
+p {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+a:hover { color: var(--color-accent-hi); }
 
 hr {
-  border: 0.5px solid var(--color-border);
-  margin: 1rem 0;
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-6) 0;
 }
 
-/* Buttons */
+::selection {
+  background: var(--color-accent-dim);
+  color: var(--color-text-hi);
+}
+
+/* thin, warm scrollbar (Chromium) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-hi);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--color-bg);
+}
+
+/* ==========================================================================
+   Layout utilities
+   ========================================================================== */
+.page-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
 .btn {
-  display: inline-block;
-  padding: 0.5rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.7rem 1.5rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
-  border: 2px solid currentColor;
-  border-radius: 6px;
-  font-weight: 500;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: 0.95rem;
+  line-height: 1;
   cursor: pointer;
   background: transparent;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 0.90;
-  }
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.btn:active { transform: scale(0.97); }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: scale(0.97) translateY(0); }
 
-  /* variants */
-.btn-primary   { 
-    background: var(--color-accent);
-    color: var(--color-text-hi);
-    width: 160px;
-  }
-.btn-primary:hover { background: var(--color-accent-hi); }
+/* variants */
+.btn-primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #FFF6EA;
+  width: auto;
+  min-width: 160px;
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+  background: var(--color-accent-hi);
+  border-color: var(--color-accent-hi);
+  box-shadow: var(--shadow-md);
+}
 
 .btn-primary:disabled {
   background: var(--color-accent-dim);
   color: var(--color-text-muted);
-  border-color: var(--color-border);
-  opacity: 0.5;
+  border-color: var(--color-accent-dim);
+  box-shadow: none;
+  opacity: 0.7;
   cursor: not-allowed;
+  transform: none;
 }
 
-.btn-secondary { 
-    background: var(--color-surface-hi);
-    color: var(--color-text);
-    border: 0.5px solid var(--color-border-hi);
-    padding: 0.5rem 1.25rem;
-    width: 120px;
-  }
-.btn-secondary:hover { background: var(--color-border-hi); }
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text-hi);
+  border: 1.5px solid var(--color-border-hi);
+  width: auto;
+  min-width: 120px;
+}
+.btn-secondary:hover { background: var(--color-surface-hi); border-color: var(--color-accent); }
 
-.btn-ghost     { 
-    background: transparent;
-    color: var(--color-text);
-    border: 0.5px solid var(--color-accent);
-  }
-.btn-ghost:hover   { background: var(--color-accent-dim); }
+.btn-ghost {
+  background: transparent;
+  color: var(--color-accent-hi);
+  border: 1.5px solid var(--color-accent);
+}
+.btn-ghost:hover { background: var(--color-accent-dim); }
 
-.btn-danger    { 
-    background: transparent;
-    color: #E24B4A;
-    border: 0.5px solid #A32D2D;
-  }
-.btn-danger:hover  { background: #501313; }
-  /* ~variants */
+.btn-danger {
+  background: transparent;
+  color: var(--color-error);
+  border: 1.5px solid var(--color-error);
+}
+.btn-danger:hover { background: rgba(193, 67, 43, 0.1); }
 
-  /* sizes */
-.btn-sm { padding: 6px 14px;  font-size: 12px; }
-.btn-lg { padding: 13px 28px; font-size: 16px; }
-  /* ~sizes */
+/* sizes */
+.btn-sm { padding: 0.4rem 1rem;   font-size: 0.8rem;  min-width: 0; }
+.btn-lg { padding: 0.9rem 2rem;   font-size: 1.05rem; }
 
-/* ~Buttons */
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  margin-bottom: var(--space-4);
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+input, textarea, select {
+  display: block;
+  width: 100%;
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  margin: 0;
+  color: var(--color-text-hi);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--color-accent-dim);
+}
+
+input.ng-invalid.ng-touched {
+  border-color: var(--color-error);
+}
 
 .error {
   color: var(--color-error);
-  background-color: var(--color-surface);
-  font-size: 0.78rem;
-  font-weight: 500;
+  background-color: transparent;
+  font-size: 0.8rem;
+  font-weight: 600;
   letter-spacing: 0.01em;
   margin-top: 0.25rem;
-  padding-left: 0.25rem;
+  padding-left: 0.6rem;
   border-left: 2px solid var(--color-error);
 }
 
 .success {
-  color: green;
-  background-color: var(--color-surface);
-  font-size: 0.78rem;
-  font-weight: 500;
+  color: var(--color-secondary-hi);
+  background-color: transparent;
+  font-size: 0.8rem;
+  font-weight: 600;
   letter-spacing: 0.01em;
   margin-top: 0.25rem;
-  padding-left: 0.25rem;
-  border-left: 2px solid green;
+  padding-left: 0.6rem;
+  border-left: 2px solid var(--color-secondary);
 }
 
-input {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-surface);
-  border: 0.1em solid var(--color-border);
-  border-radius: 0.5em;
-  gap: 1em;
-  width: 90%;
-  padding: 1em;
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-// Loading Overlay
+/* ==========================================================================
+   Loading overlay
+   ========================================================================== */
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -162,14 +314,15 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(43, 32, 20, 0.25);
+  backdrop-filter: blur(2px);
   z-index: 9999;
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.2);
+  border: 3px solid var(--color-accent-dim);
   border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;

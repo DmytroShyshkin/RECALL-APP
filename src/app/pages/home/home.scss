@@ -1,0 +1,244 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-bottom: var(--space-16);
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: var(--space-12);
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-8);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent-hi);
+  background: var(--color-accent-dim);
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-4);
+}
+
+.hero-copy h1 {
+  max-width: 14ch;
+}
+
+.hero-copy h1 em {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.hero-lead {
+  font-size: 1.1rem;
+  color: var(--color-text);
+  max-width: 46ch;
+  margin-bottom: var(--space-6);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.hero-visual {
+  position: relative;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.word-card {
+  position: absolute;
+  width: 260px;
+  border-radius: var(--radius-lg);
+}
+
+.word-card--back {
+  height: 260px;
+  background: var(--color-secondary-dim);
+  border: 1.5px solid var(--color-border);
+  transform: rotate(8deg) translate(18px, 10px);
+}
+
+.word-card--front {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border-hi);
+  box-shadow: var(--shadow-lg);
+  transform: rotate(-4deg);
+}
+
+.word-card-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.word-card-term {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text-hi);
+}
+
+.word-card-translation {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.word-card-rating {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: auto;
+}
+
+.word-card-rating span {
+  flex: 1;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.4rem 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-alt);
+  color: var(--color-text-muted);
+}
+
+.word-card-rating span.is-active {
+  background: var(--color-secondary);
+  color: #fff;
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .hero-visual {
+    height: 260px;
+    order: -1;
+  }
+  .word-card {
+    width: 220px;
+  }
+}
+
+/* ---------- Features ---------- */
+.features h2,
+.steps h2,
+.cta h2 {
+  text-align: center;
+  max-width: 32ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+}
+
+.feature-card {
+  padding: var(--space-8) var(--space-6);
+  text-align: left;
+}
+
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-dim);
+  margin-bottom: var(--space-4);
+}
+
+.feature-card h3 {
+  margin-bottom: var(--space-2);
+}
+
+.feature-card p {
+  color: var(--color-text-muted);
+  margin-bottom: 0;
+}
+
+@media (max-width: 860px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Steps ---------- */
+.step-list {
+  list-style: none;
+  margin: var(--space-8) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.step-list li {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.step-number {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff6ea;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.step-list h3 {
+  margin-bottom: 0.25rem;
+  font-size: 1.1rem;
+}
+
+.step-list p {
+  color: var(--color-text-muted);
+  margin-bottom: 0;
+}
+
+/* ---------- CTA ---------- */
+.cta-card {
+  text-align: center;
+  padding: var(--space-12) var(--space-8);
+  background: linear-gradient(135deg, var(--color-accent-dim), var(--color-secondary-dim));
+  border: none;
+}
+
+.cta-card p {
+  color: var(--color-text);
+  margin-bottom: var(--space-6);
+}
