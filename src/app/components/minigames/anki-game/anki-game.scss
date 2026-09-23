@@ -67,6 +67,21 @@
     box-shadow: var(--shadow-sm);
 }
 
+.error-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--color-error);
+    color: #FFF6EA;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    box-shadow: var(--shadow-sm);
+}
+
 /* ---------------- HEADERS ---------------- */
 h1 {
     text-align: center;

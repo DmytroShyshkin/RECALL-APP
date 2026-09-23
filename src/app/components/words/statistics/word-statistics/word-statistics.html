@@ -1,16 +1,24 @@
 <div class="wordStatisticsContainer">
-    <h1>Word Statistics</h1>
-    <section class="wordStatistics">
-        <div class="statGrid">
-            @for (item of wordStatistics; track item.wordId) {
-            <div class="statInfo">
-                <p><b>Word</b>: {{ item.word }}</p>
-                <p><b>Total Reviews</b>: {{ item.totalReviews }}</p>
-                <p><b>Correct Reviews</b>: {{ item.correctReviews }}</p>
-                <p><b>Lapses</b>: {{ item.lapses }}</p>
-                <p><b>Last Reviewed</b>: {{ item.lastReviewedAt }}</p>
-            </div>
+    <h3>Word Statistics</h3>
+    @if (wordStatistics.length > 0) {
+    <div class="statGrid">
+        @for (item of wordStatistics; track item.wordId) {
+        <article class="statInfo">
+            <p class="stat-word">{{ item.word }}</p>
+            <dl class="stat-meta">
+                <div><dt>Reviews</dt><dd>{{ item.totalReviews }}</dd></div>
+                <div><dt>Correct</dt><dd>{{ item.correctReviews }}</dd></div>
+                <div><dt>Lapses</dt><dd>{{ item.lapses }}</dd></div>
+            </dl>
+            @if (item.lastReviewedAt) {
+            <p class="stat-date">Last reviewed {{ item.lastReviewedAt }}</p>
+            } @else {
+            <p class="stat-date">Not reviewed yet</p>
             }
-        </div>
-    </section>
+        </article>
+        }
+    </div>
+    } @else {
+    <p class="no-stats">No reviews yet — start a game to see your stats here.</p>
+    }
 </div>

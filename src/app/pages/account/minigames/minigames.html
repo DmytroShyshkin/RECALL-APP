@@ -1,16 +1,29 @@
+<div class="minigames-page page-container">
 @if(activatedGame === null){
-<nav>
-    <button class="btn btn-primary btn-lg" (click)="activateGame('ANKI')">Initialize Anki</button>
-    <button class="btn btn-primary btn-lg" (click)="activateGame('QUIZ')">Initialize Quiz</button>
-</nav>
+<section class="game-select">
+    <span class="eyebrow">Practice</span>
+    <h1>Pick a way to review</h1>
+    <div class="game-cards">
+        <button class="game-card" (click)="activateGame('ANKI')">
+            <span class="game-card-icon" aria-hidden="true">🔁</span>
+            <span class="game-card-title">Anki-Style Review</span>
+            <span class="game-card-desc">Spaced repetition — rate each card and RECALL schedules the next review.</span>
+        </button>
+        <button class="game-card" (click)="activateGame('QUIZ')">
+            <span class="game-card-icon" aria-hidden="true">✅</span>
+            <span class="game-card-title">Quiz</span>
+            <span class="game-card-desc">Answer multiple-choice questions and see your score at the end.</span>
+        </button>
+    </div>
+</section>
 
-<hr>
-<app-word-statistics></app-word-statistics>
-<hr>
-<app-word-summary></app-word-summary>
-<hr>
+<section class="stats-section">
+    <h2>Your progress</h2>
+    <app-word-summary></app-word-summary>
+    <app-word-statistics></app-word-statistics>
+</section>
 } @else {
-<button class="btn btn-primary btn-lg" (click)="deactivateGame()">RETURN</button>
+<button class="btn btn-ghost back-btn" (click)="deactivateGame()">← Back</button>
 }
 
 <div class="game-container">
@@ -19,4 +32,5 @@
     } @else if(activatedGame === 'QUIZ'){
         <app-quiz-game></app-quiz-game>
     }
+</div>
 </div>

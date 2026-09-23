@@ -14,6 +14,7 @@ import { LanguagePicker } from '../../shared/language-picker/language-picker';
 export class AnkiGame implements OnInit {
   isGameInitialized = false;
   isGameFinished = false;
+  hasError = false;
 
   ankiCard: AnkiCardResponse | null = null;
   lastReviewedCard: AnkiCardResponse | null = null;
@@ -42,6 +43,7 @@ export class AnkiGame implements OnInit {
 
     // сброс на случай, если инстанс компонента переиспользуется без пересоздания
     this.isGameFinished = false;
+    this.hasError = false;
     this.ankiCard = null;
     this.lastReviewedCard = null;
 
@@ -50,11 +52,15 @@ export class AnkiGame implements OnInit {
         this.isGameInitialized = true;
         this.nextAnkiCard();
       },
-      error: (err) => console.error('Error initializing Anki game:', err),
+      error: (err) => {
+        console.error('Error initializing Anki game:', err);
+        this.hasError = true;
+      },
     });
   }
 
   nextAnkiCard() {
+    this.hasError = false;
     this.minigameService.nextAnkiCard().subscribe({
       next: (response) => {
         if (!response) {
@@ -64,8 +70,13 @@ export class AnkiGame implements OnInit {
         }
         this.ankiCard = response as AnkiCardResponse;
       },
-      error: () => {
-        this.isGameFinished = true;
+      // Важно: сюда попадают ЛЮБЫЕ ошибки запроса (протухший токен, сеть, 500 и
+      // т.д.) — это НЕ то же самое, что "карточек больше нет", поэтому раньше
+      // экран ошибочно показывал "всё повторено" даже когда бэкенд просто не
+      // ответил. Разделяем эти два состояния через hasError.
+      error: (err) => {
+        console.error('Error fetching next Anki card:', err);
+        this.hasError = true;
         this.ankiCard = null;
       },
     });
