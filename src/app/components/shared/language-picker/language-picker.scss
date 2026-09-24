@@ -10,11 +10,15 @@ input {
   background-color: var(--color-surface);
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 0.75rem 1rem;
+  /* Parent components can shrink this to fit a couple of letters (e.g. a
+     translation's target-language field) via --lp-padding / --lp-text-align
+     — see .translation-language in word-card.scss for an example. */
+  padding: var(--lp-padding, 0.75rem 1rem);
   margin: 0;
   color: var(--color-text-hi);
   font-size: 0.95rem;
   font-family: var(--font-body);
+  text-align: var(--lp-text-align, left);
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }

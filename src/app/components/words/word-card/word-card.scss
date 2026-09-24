@@ -185,6 +185,17 @@ input {
         border-color: var(--color-accent);
       }
     }
+
+    // The language code next to a translation is only ever 2-3 letters —
+    // give it just enough room so it stops covering the translated word
+    // field next to it, instead of stretching to fill the row like the
+    // picker does everywhere else.
+    app-language-picker.translation-language {
+      flex: 0 0 4.5rem;
+      width: 4.5rem;
+      --lp-padding: 0.5rem 0.4rem;
+      --lp-text-align: center;
+    }
   }
 
   .button-group {

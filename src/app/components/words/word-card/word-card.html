@@ -87,7 +87,7 @@
               <div class="translation-group-container">
                 <div [formGroupName]="$index" class="translation-group">
                   <input type="text" formControlName="translatedWord" placeholder="Translation">
-                  <app-language-picker formControlName="targetLanguage" [options]="knownLanguages" placeholder="e.g. en"></app-language-picker>
+                  <app-language-picker class="translation-language" formControlName="targetLanguage" [options]="knownLanguages" placeholder="e.g. en"></app-language-picker>
                 </div>
                 <div [formGroupName]="$index" class="translation-group">
                   <textarea formControlName="description" placeholder="Description (optional)"
@@ -168,7 +168,7 @@
               <div class="translation-group-container">
                 <div [formGroupName]="$index" class="translation-group">
                   <input type="text" formControlName="translatedWord" placeholder="Translation">
-                  <app-language-picker formControlName="targetLanguage" [options]="knownLanguages" placeholder="e.g. en"></app-language-picker>
+                  <app-language-picker class="translation-language" formControlName="targetLanguage" [options]="knownLanguages" placeholder="e.g. en"></app-language-picker>
                 </div>
                 <div [formGroupName]="$index" class="translation-group">
                   <textarea formControlName="description" placeholder="Description (optional)"

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { forkJoin, of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { TranslationDTO } from '../../../models/translations/translations.model';
 import { PageResponse, WordsDTO } from '../../../models/words/words.model';
@@ -55,6 +55,31 @@ export class WordCard implements OnInit {
     });
   }
 
+  // getKnownLanguages() only looks at the first 200 words (see its own
+  // comment), so a language that's already saved on the word being edited
+  // can be missing from `knownLanguages` if that word falls outside that
+  // page. Without this, the language-picker would show "No matches" for a
+  // language the word already legitimately uses. This just supplements the
+  // list locally with whatever this specific word already has — it's
+  // overwritten by the next real loadKnownLanguages() call anyway.
+  private ensureKnownLanguages(word: WordsDTO): void {
+    const languages = new Set(this.knownLanguages);
+    let changed = false;
+
+    if (word.sourceLanguage && !languages.has(word.sourceLanguage)) {
+      languages.add(word.sourceLanguage);
+      changed = true;
+    }
+    for (const t of word.translations || []) {
+      if (t.targetLanguage && !languages.has(t.targetLanguage)) {
+        languages.add(t.targetLanguage);
+        changed = true;
+      }
+    }
+
+    if (changed) this.knownLanguages = [...languages].sort();
+  }
+
   loadWords(): void {
     this.wordsService.getWordsByOwner(this.pageNo, this.pageSize).subscribe({
       next: (response) => this.pageResponse = response,
@@ -82,6 +107,7 @@ export class WordCard implements OnInit {
 
   openEdit(word: WordsDTO) {
     this.selectedWord = word;
+    this.ensureKnownLanguages(word);
 
     const translationGroups = (word.translations || []).map(t =>
       this.fb.group({
@@ -116,17 +142,36 @@ export class WordCard implements OnInit {
     const wordChanged = originalWord !== this.selectedWord.originalWord
       || sourceLanguage !== this.selectedWord.sourceLanguage;
 
-    if (wordChanged) {
-      this.wordsService.updateWord(this.selectedWord.id, { originalWord, sourceLanguage })
-        .subscribe({ error: (err) => console.error(err) });
-    }
-
     const originalTranslations = this.selectedWord.translations || [];
+
+    // Every save request we need to fire, collected up front so we can wait
+    // for all of them (forkJoin) instead of guessing how long they'll take.
+    // The previous version reloaded the word list after a fixed 300ms
+    // regardless of whether the requests had actually finished — on a slow
+    // or cold-starting backend that reload would run *before* the save
+    // completed, so the modal closed showing the old, unsaved data even
+    // though the request may well have succeeded moments later.
+    const requests: Observable<unknown>[] = [];
+
+    if (wordChanged) {
+      requests.push(
+        this.wordsService.updateWord(this.selectedWord.id, { originalWord, sourceLanguage }).pipe(
+          catchError(err => { console.error('Error updating word:', err); return of(null); })
+        )
+      );
+    }
 
     translations.forEach((t: TranslationDTO) => {
       if (!t.id) {
-        this.wordsService.addTranslation(this.selectedWord!.id, t)
-          .subscribe({ error: (err) => console.error(err) });
+        // Skip translation rows that were added with "+ Add Translation"
+        // but never actually filled in.
+        if (!t.translatedWord) return;
+
+        requests.push(
+          this.wordsService.addTranslation(this.selectedWord!.id, t).pipe(
+            catchError(err => { console.error('Error adding translation:', err); return of(null); })
+          )
+        );
       } else {
         const original = originalTranslations.find(ot => ot.id === t.id);
         if (!original) return;
@@ -136,17 +181,27 @@ export class WordCard implements OnInit {
           || t.description !== original.description;
 
         if (changed) {
-          this.wordsService.updateTranslation(this.selectedWord!.id, t.id, t)
-            .subscribe({ error: (err) => console.error(err) });
+          requests.push(
+            this.wordsService.updateTranslation(this.selectedWord!.id, t.id, t).pipe(
+              catchError(err => { console.error('Error updating translation:', err); return of(null); })
+            )
+          );
         }
       }
     });
 
-    setTimeout(() => {
+    const finish = () => {
       this.loadWords();
       this.loadKnownLanguages();
       this.closeEdit();
-    }, 300);
+    };
+
+    if (requests.length === 0) {
+      finish();
+      return;
+    }
+
+    forkJoin(requests).subscribe({ next: finish, error: finish });
   }
 
   deleteWord(wordId: string) {

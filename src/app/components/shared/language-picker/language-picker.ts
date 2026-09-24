@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, forwardRef } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 /**
@@ -23,7 +23,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     },
   ],
 })
-export class LanguagePicker implements ControlValueAccessor {
+export class LanguagePicker implements ControlValueAccessor, OnInit, OnDestroy {
   // Languages already used in the user's account — passed in by the parent form.
   @Input() options: string[] = [];
   @Input() placeholder = 'e.g. en';
@@ -42,7 +42,33 @@ export class LanguagePicker implements ControlValueAccessor {
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
 
+  // Bound once so it can be added/removed with the exact same reference.
+  private readonly handleDocumentClick = (event: MouseEvent): void => {
+    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
+      if (this.isOpen) this.onTouched();
+      this.isOpen = false;
+    }
+  };
+
   constructor(private elementRef: ElementRef<HTMLElement>) {}
+
+  ngOnInit(): void {
+    // Registered on the CAPTURE phase (the `true` below), not the default
+    // bubble phase. Inside a modal, the modal's own click handler calls
+    // event.stopPropagation() on every click that isn't on the overlay
+    // itself (that's what keeps clicking inside the modal from closing it) —
+    // that stops the click from ever bubbling up to `document`, so a plain
+    // `document:click` listener never fires and the dropdown was staying
+    // open forever once you clicked anywhere else in the form. The capture
+    // phase runs top-down *before* the click reaches the modal's own
+    // handler, so it always sees the click regardless of any later
+    // stopPropagation() call.
+    document.addEventListener('click', this.handleDocumentClick, true);
+  }
+
+  ngOnDestroy(): void {
+    document.removeEventListener('click', this.handleDocumentClick, true);
+  }
 
   // --- ControlValueAccessor ---
 
@@ -118,13 +144,5 @@ export class LanguagePicker implements ControlValueAccessor {
       : [...current, option];
     this.inputValue = next.join(', ');
     this.onChange(this.inputValue);
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
-      if (this.isOpen) this.onTouched();
-      this.isOpen = false;
-    }
   }
 }
