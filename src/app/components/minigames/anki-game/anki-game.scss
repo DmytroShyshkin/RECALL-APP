@@ -1,155 +1,193 @@
+// Shared shell — kept identical (name-for-name) with quiz-game.scss so the
+// two minigames always look like one system, not two separately-styled pages.
 :host {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-12) var(--space-6) var(--space-16);
 }
 
-/* ---------------- FORM CONTAINER ---------------- */
-
-.anki-form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 2rem;
-
-    border: 1px solid var(--color-border-hi);
-    background: var(--color-surface);
-    padding: 2rem;
-    border-radius: 10px;
-    width: fit-content;
+.eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent-hi);
+  background: var(--color-accent-dim);
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-4);
 }
 
-/* ---------------- GAME CONTAINER ---------------- */
-
-.anki-game-container {
-    margin-top: 2rem;
-    width: 100%;
-    max-width: 700px;
-
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-
-    align-items: center;
-
-    border: 1px solid var(--color-border-hi);
-    background: var(--color-surface);
-    padding: 0;
-}
-
-/* ---------------- FINAL SCREEN ---------------- */
-
-.anki-final-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 2rem;
-
-    border: 1px solid var(--color-border-hi);
-    background: var(--color-surface);
-    padding: 2.5rem 2rem;
-    border-radius: 10px;
-    width: fit-content;
-    max-width: 420px;
-    text-align: center;
-}
-
-.success-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--color-secondary);
-    box-shadow: var(--shadow-sm);
-}
-
-.error-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--color-error);
-    color: #FFF6EA;
-    font-family: var(--font-display);
-    font-size: 1.75rem;
-    font-weight: 700;
-    box-shadow: var(--shadow-sm);
-}
-
-/* ---------------- HEADERS ---------------- */
 h1 {
-    text-align: center;
+  text-align: center;
+  margin-bottom: var(--space-8);
 }
 
-/* ---------------- FORM STYLES ---------------- */
+/* ---------------- FORM CARD ---------------- */
 
-.buttonContainer {
-    display: flex;
-    justify-content: center;
+.minigame-form-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-8);
 }
 
 form {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.form-row {
+  display: flex;
+  gap: var(--space-4);
+
+  @media (max-width: 480px) {
     flex-direction: column;
-    gap: 1.5rem;
+  }
+
+  .field {
+    flex: 1;
+    margin-bottom: 0;
+  }
 }
 
-section {
-    padding: 2rem;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 100%;
+.form-actions {
+  display: flex;
+  justify-content: center;
 }
 
-.labelContainer {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
+/* ---------------- RESULT CARD (finished / error) ---------------- */
 
-    div {
-        display: flex;
-        flex-direction: column;
-
-        flex-basis: 0;
-        flex-grow: 1;
-    }
-
-    input {
-        max-width: 300px;
-        width: 100%;
-        padding: 0.75rem;
-        border-radius: 6px;
-        border: 1px solid var(--color-border);
-        background: var(--color-surface-hi);
-        color: var(--color-text-hi);
-        font-size: 0.9rem;
-
-
-        &:focus {
-            outline: none;
-            border-color: var(--color-accent);
-        }
-    }
+.minigame-result-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-12) var(--space-8);
 }
 
-/* ---------------- GAME STYLES ---------------- */
-
-.card {
-    padding: 1.5rem;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
+.result-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-2);
 }
 
-.button-group {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
+.result-badge--success {
+  background: var(--color-secondary);
+}
+
+.result-badge--error {
+  background: var(--color-error);
+  color: #FFF6EA;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.result-meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---------------- PLAY CARD (flashcard) ---------------- */
+
+.minigame-play-card {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flashcard {
+  width: 100%;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-12) var(--space-8);
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.flashcard-word {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text-hi);
+  margin: 0 0 var(--space-3);
+}
+
+.flashcard-translations {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.flashcard-translation {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+}
+
+.rating-group {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-rating {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border-hi);
+  border-radius: var(--radius-pill);
+  min-width: 92px;
+}
+
+.btn-rating--again {
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+.btn-rating--again:hover { background: rgba(193, 67, 43, 0.1); }
+
+.btn-rating--hard {
+  color: var(--color-accent-hi);
+  border-color: var(--color-accent);
+}
+.btn-rating--hard:hover { background: var(--color-accent-dim); }
+
+.btn-rating--good {
+  color: var(--color-secondary-hi);
+  border-color: var(--color-secondary);
+}
+.btn-rating--good:hover { background: var(--color-secondary-dim); }
+
+.btn-rating--easy {
+  color: #FFF6EA;
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+.btn-rating--easy:hover {
+  background: var(--color-secondary-hi);
+  border-color: var(--color-secondary-hi);
 }

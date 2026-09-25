@@ -1,57 +1,64 @@
-<h1>Anki-Style Game</h1>
-@if (!isGameInitialized) {
-<div class="anki-form-container">
-    <section>
-        <form [formGroup]="ankiForm" (ngSubmit)="onSubmit()">
-            <div class="labelContainer">
-                <div>
-                    <label for="sourceLanguage">Source Language:</label>
-                    <app-language-picker id="sourceLanguage" formControlName="sourceLanguage" [options]="knownLanguages" placeholder="Example: en"></app-language-picker>
-                </div>
-                <div>
-                    <label for="targetLanguage">Target Language:</label>
-                    <app-language-picker id="targetLanguage" formControlName="targetLanguage" [options]="knownLanguages" placeholder="Example: es"></app-language-picker>
-                </div>
-            </div>
+<div class="minigame-page">
+  <span class="eyebrow">Spaced Repetition</span>
+  <h1>Anki-Style Game</h1>
 
-            <div class="buttonContainer">
-                <button type="submit" class="btn btn-primary" [disabled]="!ankiForm.valid">Initialize Game</button>
-            </div>
-        </form>
-    </section>
-</div>
-} @else if (hasError) {
-<div class="anki-final-container">
-    <span class="error-badge" aria-hidden="true">!</span>
+  @if (!isGameInitialized) {
+  <div class="minigame-form-card">
+    <form [formGroup]="ankiForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="field">
+          <label for="sourceLanguage">Source Language</label>
+          <app-language-picker id="sourceLanguage" formControlName="sourceLanguage" [options]="knownLanguages" placeholder="Example: en"></app-language-picker>
+        </div>
+        <div class="field">
+          <label for="targetLanguage">Target Language</label>
+          <app-language-picker id="targetLanguage" formControlName="targetLanguage" [options]="knownLanguages" placeholder="Example: es"></app-language-picker>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="!ankiForm.valid">Start Session</button>
+      </div>
+    </form>
+  </div>
+  } @else if (hasError) {
+  <div class="minigame-result-card">
+    <span class="result-badge result-badge--error" aria-hidden="true">!</span>
     <p>Something went wrong loading the next card. Check your connection and try again.</p>
     <button class="btn btn-secondary" (click)="nextAnkiCard()">Try again</button>
-</div>
-} @else if (isGameFinished) {
-<div class="anki-final-container">
-    <span class="success-badge" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 13l4 4L19 7" stroke="#FFFDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+  </div>
+  } @else if (isGameFinished) {
+  <div class="minigame-result-card">
+    <span class="result-badge result-badge--success" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 13l4 4L19 7" stroke="#FFFDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </span>
     @if (lastReviewedCard) {
-        <p>Congratulations! You've completed the Anki-style game. Next review at {{ formatingData(lastReviewedCard.nextReviewAt) }}</p>
+      <p>Congratulations! You've completed the Anki-style game.</p>
+      <p class="result-meta">Next review at {{ formatingData(lastReviewedCard.nextReviewAt) }}</p>
     } @else {
-        <p>Nothing to review right now — you're all caught up! Come back a bit later for your next session.</p>
+      <p>Nothing to review right now — you're all caught up!</p>
+      <p class="result-meta">Come back a bit later for your next session.</p>
     }
-</div>
-} @else if (ankiCard) {
-<div class="anki-game-container">
-    <div class="card">
-        <p>{{ ankiCard.word }}</p>
+  </div>
+  } @else if (ankiCard) {
+  <div class="minigame-play-card">
+    <span class="eyebrow">Flashcard</span>
+    <div class="flashcard">
+      <p class="flashcard-word">{{ ankiCard.word }}</p>
+      <div class="flashcard-translations">
         @for (translation of ankiCard.translations; track $index) {
-        <p>{{ translation }}</p>
+        <span class="flashcard-translation">{{ translation }}</span>
         }
+      </div>
     </div>
-    <div class="button-group">
-        <button class="btn btn-danger" (click)="reviewAnkiCard(ankiCard.id, 1)">Again</button>
-        <button class="btn btn-danger" (click)="reviewAnkiCard(ankiCard.id, 2)">Hard</button>
-        <button class="btn btn-success" (click)="reviewAnkiCard(ankiCard.id, 3)">Good</button>
-        <button class="btn btn-success" (click)="reviewAnkiCard(ankiCard.id, 4)">Easy</button>
+    <div class="rating-group">
+      <button class="btn btn-rating btn-rating--again" (click)="reviewAnkiCard(ankiCard.id, 1)">Again</button>
+      <button class="btn btn-rating btn-rating--hard" (click)="reviewAnkiCard(ankiCard.id, 2)">Hard</button>
+      <button class="btn btn-rating btn-rating--good" (click)="reviewAnkiCard(ankiCard.id, 3)">Good</button>
+      <button class="btn btn-rating btn-rating--easy" (click)="reviewAnkiCard(ankiCard.id, 4)">Easy</button>
     </div>
+  </div>
+  }
 </div>
-}

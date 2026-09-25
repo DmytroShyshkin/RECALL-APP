@@ -6,6 +6,7 @@
     gap: var(--space-4);
     width: 100%;
     padding: 1rem;
+    box-sizing: border-box;
 }
 
 .wordStatisticsContainer h3 {
@@ -15,10 +16,20 @@
 
 .statGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    // minmax(220px, 1fr) alone forces every column to be at least 220px wide
+    // no matter what — on a flex parent (.wordStatisticsContainer is
+    // display: flex) a child's default min-width is its content's min-content
+    // size, so the grid refused to shrink below ~220px per column and pushed
+    // the whole page into horizontal scroll on narrow phones instead of
+    // collapsing to a single column. min(220px, 100%) caps that minimum at
+    // the container's own width, and min-width: 0 lets the grid actually
+    // shrink to it inside the flex parent.
+    grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
     gap: var(--space-4);
     max-width: 1000px;
     width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .statInfo {

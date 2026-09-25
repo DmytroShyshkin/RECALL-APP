@@ -1,39 +1,47 @@
-<h1>Quiz Game</h1>
-@if(!isGameInitialized){
-<div class="quiz-form-container">
-    <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
-        <div class="labelContainer">
-            <div>
-                <label for="languages">Languages:</label>
-                <app-language-picker id="languages" formControlName="languages" [options]="knownLanguages" mode="multi-csv" placeholder="Example: en, es"></app-language-picker>
-            </div>
-            <div [hidden]="true">
-                <label for="wordCount">Word Count:</label>
-                <input id="wordCount" name="wordCount" formControlName="wordCount" placeholder="Example: 4">
-            </div>
-        </div>
+<div class="minigame-page">
+  <span class="eyebrow">Quiz</span>
+  <h1>Quiz Game</h1>
 
-        <div class="buttonContainer">
-            <button type="submit" class="btn btn-primary" [disabled]="!quizForm.valid">Initialize Game</button>
-        </div>
+  @if (!isGameInitialized) {
+  <div class="minigame-form-card">
+    <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="languages">Languages</label>
+        <app-language-picker id="languages" formControlName="languages" [options]="knownLanguages" mode="multi-csv" placeholder="Example: en, es"></app-language-picker>
+      </div>
+      <div [hidden]="true">
+        <label for="wordCount">Word Count:</label>
+        <input id="wordCount" name="wordCount" formControlName="wordCount" placeholder="Example: 4">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="!quizForm.valid">Start Quiz</button>
+      </div>
     </form>
-</div>
-}@else {
-<div class="quiz-game-container">
-    @if(!quizSession?.completed) {
-    <div class="quizQuestion">
-        <p>{{ quizSession?.currentQuestion?.question }}</p>
+  </div>
+  } @else {
+  <div class="minigame-play-card">
+    @if (!quizSession?.completed) {
+    <span class="eyebrow">Question</span>
+    <div class="quiz-question-card">
+      <p class="quiz-question-text">{{ quizSession?.currentQuestion?.question }}</p>
     </div>
-    <div class="quizOptions">
-        @for(option of quizSession?.currentQuestion?.options; track $index) {
-        <button class="btn btn-secondary" (click)="answerQuizQuestionGame(option)">{{ option }}</button>
-        }
+    <div class="quiz-options">
+      @for (option of quizSession?.currentQuestion?.options; track $index) {
+      <button class="btn btn-secondary" (click)="answerQuizQuestionGame(option)">{{ option }}</button>
+      }
     </div>
-    }@else{
-    <div class="quizCompleted">
-        <p>Congratulations! You've completed the quiz game.</p>
-        <p>Your score: {{ quizSession?.score }} / {{ quizSession?.totalQuestions }}</p>
+    } @else {
+    <div class="minigame-result-card">
+      <span class="result-badge result-badge--success" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 13l4 4L19 7" stroke="#FFFDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <p>Congratulations! You've completed the quiz game.</p>
+      <p class="result-score"><span class="result-score-value">{{ quizSession?.score }}</span> / {{ quizSession?.totalQuestions }}</p>
     </div>
     }
+  </div>
+  }
 </div>
-}

@@ -307,8 +307,15 @@ input {
 
 .words-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  // Same fix as .statGrid in word-statistics.scss: .words-section (this
+  // grid's parent) is display: flex, and a plain minmax(250px, 1fr) refuses
+  // to shrink below 250px per column inside a flex parent, overflowing the
+  // page horizontally on narrow phones instead of collapsing to one column.
+  grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
   gap: 1rem;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .word-header {
