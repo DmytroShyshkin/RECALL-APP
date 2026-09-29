@@ -41,7 +41,7 @@ export class AnkiGame implements OnInit {
     if (!this.ankiForm.valid) return;
     const { sourceLanguage, targetLanguage } = this.ankiForm.value;
 
-    // сброс на случай, если инстанс компонента переиспользуется без пересоздания
+    // reset in case the component instance is reused instead of recreated
     this.isGameFinished = false;
     this.hasError = false;
     this.ankiCard = null;
@@ -70,10 +70,10 @@ export class AnkiGame implements OnInit {
         }
         this.ankiCard = response as AnkiCardResponse;
       },
-      // Важно: сюда попадают ЛЮБЫЕ ошибки запроса (протухший токен, сеть, 500 и
-      // т.д.) — это НЕ то же самое, что "карточек больше нет", поэтому раньше
-      // экран ошибочно показывал "всё повторено" даже когда бэкенд просто не
-      // ответил. Разделяем эти два состояния через hasError.
+      // Important: this catches ANY request error (expired token, network, 500,
+      // etc.) — that's NOT the same as "no more cards", so the screen used to
+      // wrongly show "all reviewed" even when the backend simply didn't respond.
+      // hasError keeps these two states apart.
       error: (err) => {
         console.error('Error fetching next Anki card:', err);
         this.hasError = true;

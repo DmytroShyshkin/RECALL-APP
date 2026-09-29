@@ -280,7 +280,6 @@ input {
   gap: 1rem;
   margin-bottom: 1.5rem;
   justify-content: center;
-  /* ✔ центрируем элементы */
 
   @media (max-width: 600px) {
     flex-direction: column;
