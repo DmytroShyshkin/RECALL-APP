@@ -95,6 +95,14 @@ export class AnkiGame implements OnInit {
   formatingData(data: string): string {
     const date = new Date(data);
     if (isNaN(date.getTime())) return '—';
+
+    const diffMs = date.getTime() - Date.now();
+    const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+
+    if (diffMs <= 0) return 'now';
+    else if (diffMs <= 3600000) return rtf.format(Math.round(diffMs / 60000), 'minute');
+    else if (diffMs <= 86400000) return rtf.format(Math.round(diffMs / 3600000), 'hour');
+
     return date.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
   }
 }
