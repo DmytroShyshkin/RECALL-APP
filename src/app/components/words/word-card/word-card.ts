@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize, switchMap } from 'rxjs/operators';
 import { TranslationDTO } from '../../../models/translations/translations.model';
 import { PageResponse, WordsDTO } from '../../../models/words/words.model';
 import { Words } from '../../../services/words/words';
@@ -30,6 +30,7 @@ export class WordCard implements OnInit {
   selectedSynonymId = '';
   addWordSynonymIds: string[] = [];
   selectedAddSynonymId = '';
+  enrichingIndex: number | null = null;
 
   constructor(private wordsService: Words, private languagesService: Languages, private fb: FormBuilder) {
     this.editForm = this.fb.group({
@@ -229,6 +230,42 @@ export class WordCard implements OnInit {
     }
 
     this.translationsArray.removeAt(index);
+  }
+
+  // Calls the backend AI-enrichment endpoint for one translation row, then
+  // refetches the whole word (the endpoint itself returns 204 No Content,
+  // so there is nothing to apply locally) and patches just that row's
+  // controls with the fresh translatedWord/description. enrichingIndex
+  // gates the button for this row and is always cleared via finalize,
+  // regardless of success or failure.
+  enrichTranslation(index: number): void {
+    if (!this.selectedWord || this.enrichingIndex !== null) return;
+
+    const group = this.translationsArray.at(index);
+    const targetLanguage = group.get('targetLanguage')?.value;
+    if (!targetLanguage) return;
+
+    this.enrichingIndex = index;
+
+    this.wordsService.enrichWord(this.selectedWord.id, targetLanguage).pipe(
+      switchMap(() => this.wordsService.getWordById(this.selectedWord!.id)),
+      finalize(() => this.enrichingIndex = null)
+    ).subscribe({
+      next: (freshWord) => {
+        this.selectedWord = freshWord;
+        this.ensureKnownLanguages(freshWord);
+
+        const updated = freshWord.translations?.find(t => t.targetLanguage === targetLanguage);
+        if (updated) {
+          group.patchValue({
+            id: updated.id,
+            translatedWord: updated.translatedWord,
+            description: updated.description
+          });
+        }
+      },
+      error: (err) => console.error('Error enriching translation:', err)
+    });
   }
 
   // Resolves a synonym id (from WordsDTO.synonymIds) to the actual word,

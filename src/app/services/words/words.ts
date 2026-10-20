@@ -29,6 +29,15 @@ export class Words {
   updateWord(wordId: string, data: { originalWord: string; sourceLanguage: string }) {
     return this.http.put(`${this.apiUrl}/words/update-word/${wordId}`, data);
   }
+
+  getWordById(wordId: string): Observable<WordsDTO> {
+    return this.http.get<WordsDTO>(`${this.apiUrl}/words/${wordId}`);
+  }
+
+  enrichWord(wordId: string, targetLanguage: string): Observable<void> {
+    const params = new HttpParams().set('targetLanguage', targetLanguage);
+    return this.http.post<void>(`${this.apiUrl}/words/${wordId}/enrich`, null, { params });
+  }
  
   deleteWord(wordId: string) {
     return this.http.delete(`${this.apiUrl}/words/delete-word/${wordId}`);
